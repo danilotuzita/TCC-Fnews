@@ -1,5 +1,3 @@
-
-
 class Word:
     value = ""
     probability = 1

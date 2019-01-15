@@ -1,29 +1,34 @@
-import word, phrase
+from word import Word
+from phrase import Phrase
 
 
 class Text:
-    words = []
-    phrases = []
+    words = []  # tipo Word
+    phrases = []  # tipo Phrase
     probability = 1
 
-    def __init__(self, words=()):
-        self.words = words
-
-    def make_text(self, words):
+    def __init__(self, wrds=(), p=1):
+        self.probability = p
         self.words = []
-        for w in words:
-            self.words.append(word.Word(w, self.probability))
+        for w in wrds:
+            self.words.append(Word(w, self.probability))
+
+    def set_words(self, w=()):
+        self.words = w
+
+    def get_word(self, i):
+        try:
+            return self.words[i]
+        except IndexError:
+            return Word('', self.probability)
 
     def build_phrases(self, k):
         for i in range(len(self.words)):
             p = []
             for j in range(k):
-                try:
-                    w = self.words[i + j]
-                except IndexError:
-                    w = word.Word('', self.probability)
+                w = self.get_word(i + j)
                 p.append(w)
-            self.phrases.append(phrase.Phrase(p, k))
+            self.phrases.append(Phrase(p, k))
 
     def size(self):
         return len(self.words)
@@ -34,3 +39,9 @@ class Text:
     def print_phrases(self):
         for p in self.phrases:
             p.print()
+
+    def print_text(self):
+        p = '"'
+        for w in self.words:
+            p += w.value + ' '
+        print(p + '"')

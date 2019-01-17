@@ -1,5 +1,5 @@
 from classes.text import Text
-
+from classes.db import DB
 
 select_media = "SELECT WORD, AVG(PROBABILITY), COUNT(PROBABILITY) FROM WORDS GROUP BY WORD ORDER BY 2, 3;"
 insert_word = "INSERT INTO WORDS VALUES (?,?);"
@@ -17,9 +17,13 @@ def main():
     for r in raw_texts:
         t = Text(r[0], r[1])
         t.build_phrases(3)
-        # t.print_text()
+        t.print_phrases()
         texts.append(t)
+
 
 # main()
 
+db = DB()
+# a = db.query(select_media, True)
+# input()
 

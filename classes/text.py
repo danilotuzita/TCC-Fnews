@@ -1,5 +1,5 @@
-from word import Word
-from phrase import Phrase
+from classes.word import Word
+from classes.phrase import Phrase
 
 
 class Text:

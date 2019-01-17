@@ -1,4 +1,4 @@
-from text import Text
+from classes.text import Text
 
 
 select_media = "SELECT WORD, AVG(PROBABILITY), COUNT(PROBABILITY) FROM WORDS GROUP BY WORD ORDER BY 2, 3;"

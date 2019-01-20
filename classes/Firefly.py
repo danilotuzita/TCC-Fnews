@@ -12,10 +12,10 @@ class FireflyProgram:
         maxEpochs = 1000
         seed = 0
 
-        print("Setting numFireflies        = " + str(numFireflies))
-        print("Setting problem dim         = " + str(dim))
-        print("Setting maxEpochs           = " + str(maxEpochs))
-        print("Setting initialization seed = " + str(seed))
+        print("Setting numFireflies        = ", str(numFireflies))
+        print("Setting problem dim         = ", str(dim))
+        print("Setting maxEpochs           = ", str(maxEpochs))
+        print("Setting initialization seed = ", str(seed))
 
         print("\n### STARTING FIREFLY ALGORITHM ###")
         best_position = self.solve(numFireflies, dim, seed, maxEpochs)
@@ -43,12 +43,12 @@ class FireflyProgram:
 
     def solve(self, numFireflies, dim, seed, maxEpochs):
         rnd = random.seed(seed)
-        minX = -10.0
-        maxX = 10.0
+        minX = 0.0
+        maxX = 3.2
 
         b0 = 1.0
         g = 1.0
-        a = 0.20
+        a = 0.2
 
         displayInterval = maxEpochs / 10
 
@@ -60,12 +60,10 @@ class FireflyProgram:
             for indexB in range(0, dim):
                 swarm[index].position.append((maxX - minX) * random.uniform(0, 1) + minX)
             swarm[index].error = self.error(swarm[index].position)
-
             swarm[index].intensity = 1 / (swarm[index].error + 1)
 
             if swarm[index].error < bestError:
                 bestError = swarm[index].error
-
                 for indexB in range(0, dim):
                     bestPosition.append(swarm[index].position[indexB])
         epoch = 0
@@ -74,12 +72,10 @@ class FireflyProgram:
                 sEpoch = str(epoch)
                 print("epoch = ", sEpoch)
                 print("error = ", bestError)
-            epoch += 1
             for index in range(0, len(swarm)):
                 for indexB in range(0, len(swarm)):
                     if swarm[index].intensity < swarm[indexB].intensity:
                         r = self.distance(swarm[index].position, swarm[indexB].position)
-
                         beta = b0 * math.exp(-g * r * r)
 
                         for indexC in range(0, dim):
@@ -112,15 +108,15 @@ class FireflyProgram:
 
     def distance(self, posA, posB):
         ssd = 0.0
-        for index, pos in enumerate(posA):
+        for index in range(0, len(posA)):
             ssd += (posA[index] - posB[index]) * (posA[index] - posB[index])
         return math.sqrt(ssd)
 
     def michalewicz(self, xValues):
         result = 0.0
-        for index, v in enumerate(xValues):
-            a = math.sin(v)
-            b = math.sin((index + 1) * v * v / math.pi)
+        for index in range(0, len(xValues)):
+            a = math.sin(xValues[index])
+            b = math.sin((index + 1) * xValues[index] * xValues[index] / math.pi)
             c = math.pow(b, 20)
             result += a + c
         return -1.0 * result

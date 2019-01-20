@@ -37,7 +37,7 @@ class FireflyProgram:
 
     def showVector(self, v, dec, nl):
         for best in v:
-            print(best + "F" + dec + " ")
+            print(best, "F", dec, " ")
         if nl:
             print("")
 
@@ -53,47 +53,60 @@ class FireflyProgram:
         displayInterval = maxEpochs / 10
 
         bestError = sys.float_info.max
-        bestPosition = [dim]
-
-        swarm = [Firefly(numFireflies)]
-
-        for index in range(0, dim):
-            swarm[index] = Firefly(dim)
+        bestPosition = []
+        swarm = []
+        for index in range(0, numFireflies):
+            swarm.append(Firefly(dim))
             for indexB in range(0, dim):
-                swarm[index].position[indexB] = (maxX - minX) * random.uniform(0, 1) + minX
+                swarm[index].position.append((maxX - minX) * random.uniform(0, 1) + minX)
             swarm[index].error = self.error(swarm[index].position)
+
             swarm[index].intensity = 1 / (swarm[index].error + 1)
+
             if swarm[index].error < bestError:
                 bestError = swarm[index].error
-                for indexB, d in enumerate(dim):
-                    bestPosition[index] = swarm[index].position[indexB]
+
+                for indexB in range(0, dim):
+                    bestPosition.append(swarm[index].position[indexB])
         epoch = 0
         while epoch < maxEpochs:
             if epoch % displayInterval == 0 and epoch < maxEpochs:
                 sEpoch = str(epoch)
-                print("epoch = " + sEpoch)
-                print("error = " + bestError)
-
-            for index, f in enumerate(swarm):
-                for indexB, fB in enumerate(swarm):
+                print("epoch = ", sEpoch)
+                print("error = ", bestError)
+            epoch += 1
+            for index in range(0, len(swarm)):
+                for indexB in range(0, len(swarm)):
                     if swarm[index].intensity < swarm[indexB].intensity:
                         r = self.distance(swarm[index].position, swarm[indexB].position)
+
                         beta = b0 * math.exp(-g * r * r)
+
                         for indexC in range(0, dim):
-                            swarm[index].position[indexC] += beta * (
-                                        swarm[indexB].position[indexC] - swarm[index].position[indexC])
-                            swarm[index].position[indexC] += a * (rnd.uniform(0, 1) * 0.5)
+                            swarm[index].position[indexC] += beta * (swarm[indexB].position[indexC] - swarm[index].position[indexC])
+                            swarm[index].position[indexC] += a * (random.uniform(0, 1) * 0.5) #verificar
                             if swarm[index].position[indexC] < minX:
-                                swarm[index].position[indexC] = (maxX - minX * rnd.uniform(0, 1) + minX)
+                                swarm[index].position[indexC] = (maxX - minX * random.uniform(0, 1) + minX)
                             if swarm[index].position[indexC] > maxX:
-                                swarm[index].position[indexC] = (maxX - minX * rnd.uniform(0, 1) + minX)
+                                swarm[index].position[indexC] = (maxX - minX * random.uniform(0, 1) + minX)
                         swarm[index].error = self.error(swarm[index].position)
                         swarm[index].intensity = 1 / (swarm[index].error + 1)
-            swarm.sort()
-            if swarm[0].error < bestError:
-                bestError = swarm[0].error
-                for index, d in dim:
-                    bestPosition[index] = swarm[0].position[index]
+            erros = []
+            vetor = []
+            for x in swarm:
+                erros.append(x.error)
+                vetor.append([x.error, x])
+            erros.sort()
+            vetorOrdenado = []
+            for x in erros:
+                for y in vetor:
+                    if x == y[0]:
+                        vetorOrdenado.append(y[1])
+
+            if vetorOrdenado[0].error < bestError:
+                bestError = vetorOrdenado[0].error
+                for index in range(0, dim):
+                    bestPosition[index] = vetorOrdenado[0].position[index]
             epoch += 1
         return bestPosition
 
@@ -113,7 +126,7 @@ class FireflyProgram:
         return -1.0 * result
 
     def error(self, xValues):
-        dim = xValues.length
+        dim = len(xValues)
         trueMin = 0.0
         if dim == 2:
             trueMin = -1.8013
@@ -127,7 +140,7 @@ class FireflyProgram:
 
 class Firefly:
     def __init__(self, dim):
-        self.position = [dim]
+        self.position = []
         self.error = 0.0
         self.intensity = 0.0
 

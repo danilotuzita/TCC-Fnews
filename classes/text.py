@@ -11,7 +11,7 @@ class Text:
         self.probability = p
         self.words = []
         for w in wrds:
-            self.words.append(Word(w, self.probability))
+            self.words.append(Word(w, self.probability)) #incluir checagem de igual
 
     def set_words(self, w=()):
         self.words = w

@@ -1,10 +1,15 @@
 class Word:
-    value = ""
-    probability = 1
+    value = "" #palavra
+    probability = 1 #probabilidade da palavra
+    count = 1 #contagem para a média
 
-    def __init__(self, value="", p=1):
+    def __init__(self, value="", p=1, count = 1):
         self.value = value
         self.probability = p
+        self.count = count
 
     def set_probability(self, p=1):
         self.probability = p
+
+    def inc_count(self):            #função para aumentar o contador de existencia da palavra
+        self.count = self.count + 1

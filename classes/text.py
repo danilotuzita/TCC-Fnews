@@ -5,7 +5,7 @@ from classes.phrase import Phrase
 class Text:
     words = []  # tipo Word
     phrases = []  # tipo Phrase
-    probability = 1
+    probability = 1 #probabilidade do texto
 
     def __init__(self, wrds=(), p=1):
         self.probability = p

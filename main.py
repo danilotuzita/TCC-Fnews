@@ -1,11 +1,9 @@
 from classes.text import Text
 from classes.db import DB
-
-select_media = "SELECT WORD, AVG(PROBABILITY), COUNT(PROBABILITY) FROM WORDS GROUP BY WORD ORDER BY 2, 3;"
-insert_word = "INSERT INTO WORDS VALUES (?,?);"
+import csv
 
 
-def main():
+def main2():
     texts = []
     raw_texts = [
         [str.split('Bill and Hillary Clinton attend Donald Trump last wedding', ' '), 1],
@@ -21,9 +19,20 @@ def main():
         texts.append(t)
 
 
-# main()
+def main():
+    t = None
+    with open('database/treino.csv', newline='', encoding='utf-8-sig') as csvfile:
+        reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
+        for row in reader:
+            t = Text(str.split(str.upper(row[1])), row[0])
+            t.build_phrases(3)
+    db = DB()
+    db.insert_text(t)
 
-db = DB()
+
+main()
+
+
 # a = db.query(select_media, True)
 # input()
 

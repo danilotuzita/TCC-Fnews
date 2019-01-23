@@ -11,15 +11,11 @@ class Word:
     def set_probability(self, p=1):
         self.probability = p
 
-
     def inc_count(self):  # função para aumentar o contador de existencia da palavra
         self.count = self.count + 1
 
-<<<<<<< HEAD
     def get_id(self, db, print_values=False):
         return db.get_word_id(self, print_values)
-=======
 
     def avg_prob(self, new_prob):
         self.probability = ((1 / (self.count)) * (self.count - 1) * self.probability) + (1 / self.count) * new_prob
->>>>>>> c205bc47bf932572b17ececaa8538843357f523c

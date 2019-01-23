@@ -1,9 +1,9 @@
 class Phrase:
-    k = 1 #tamanho da frase???
-    words = [] #conjunto de palavras
-    probability = 1 #probabilidade de ser falso / verdadeiro ???
-    alpha = 1 #o que é???
-    count = 1 #quantidade de vezes que a frase apareceu, para calcular média
+    k = 1  # tamanho da frase???
+    words = []  # conjunto de palavras
+    probability = 1  # probabilidade de ser falso / verdadeiro ???
+    alpha = 1  # o que é???
+    count = 1  # quantidade de vezes que a frase apareceu, para calcular média
 
     def __init__(self, words=(), k=1, p=1, a=1, count=1):
         self.k = k

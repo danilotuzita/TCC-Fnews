@@ -11,7 +11,7 @@ class Text:
         self.probability = p
         self.words = []
         for w in wrds:
-            self.words.append(Word(w, self.probability)) #incluir checagem de igual
+            self.words.append(Word(w, self.probability))  # incluir checagem de igual
 
     def set_words(self, w=()):
         self.words = w
@@ -24,11 +24,11 @@ class Text:
 
     def build_phrases(self, k):
         for i in range(len(self.words)):
-            p = []
+            wrds = []
             for j in range(k):
                 w = self.get_word(i + j)
-                p.append(w)
-            self.phrases.append(Phrase(p, k))
+                wrds.append(w)
+            self.phrases.append(Phrase(words=wrds, k=k, p=self.probability))
 
     def size(self):
         return len(self.words)

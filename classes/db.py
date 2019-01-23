@@ -5,6 +5,9 @@ import datetime
 
 class DB:
     path = None
+    filename = None
+    debug = False
+    debug_filename = None
     conn = None
     c = None
     tables = [
@@ -37,18 +40,34 @@ class DB:
         ");"
     ]
 
-    def __init__(self, path='database/database.db'):
+    def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug'):
         self.path = path
-        self.conn = sqlite3.connect(path)
+        self.filename = filename
+        self.conn = sqlite3.connect(path + filename + '.db')
         self.c = self.conn.cursor()
         self.check_tables()
 
+        self.debug = debug
+        if debug:
+            self.open_debug(debug_filename)
+
     def __del__(self):
         self.conn.close()
+        if self.debug:
+            self.debug.close()
 
-    def save_backup(self):
+    def open_debug(self, debug_filename):
+        self.debug = open(self.path + debug_filename+'.log', 'w+')
+
+    def save_backup(self, directory=None, rel_directory='bkp/'):
         self.conn.close()
-        os.rename(self.path, self.path + datetime.datetime.now().strftime("_%Y%m%d_%H%M%S"))
+        new_directory = self.path + rel_directory + self.filename
+        if directory:
+            new_directory = directory + self.filename
+        old_filename = self.path + self.filename + '.db'
+        new_filename = new_directory + datetime.datetime.now().strftime("_%Y%m%d-%H%M%S.db")
+        os.rename(old_filename, new_filename)
+        return new_filename
 
     def check_tables(self):
         for query in self.tables:
@@ -62,10 +81,10 @@ class DB:
             self.commit()
 
     def make_readable(self, cursor):
-        lenght = len(cursor)
-        if lenght > 0:
+        length = len(cursor)
+        if length > 0:
             lista = [list(row) for row in cursor]
-            if lenght == 1:
+            if length == 1:
                 if len(lista[0]) == 1:
                     return lista[0][0]
                 return lista[0]
@@ -78,15 +97,18 @@ class DB:
         retorno = self.make_readable(self.c.fetchall())
 
         if print_values:
-            for r in retorno:
-                print(r)
+            print(retorno)
         return retorno
 
     def execute(self, query):
+        if self.debug:
+            self.debug.write(query + '\n')
+
         try:
             self.c.execute(query)
         except sqlite3.Error as e:
             print(query + "\nError running query: ", e.args)
+            self.conn.close()
             exit(999)
 
     def commit(self):
@@ -109,12 +131,12 @@ class DB:
         self.commit()
 
     def get_phrase_id(self, phrase, force_create=False, print_values=False):
-        query = 'SELECT * FROM PHRASES WHERE '
+        query = 'SELECT ID FROM PHRASES WHERE '
         for i, word in enumerate(phrase.words):
-            if i: query += 'AND '
+            if i: query += 'OR '
             wid = self.get_word_id(word)
             query += '(WORD_ID = ' + str(wid) + ' AND WORD_ORDER = ' + str(i) + ') '
-        query += 'ORDER BY WORD_ORDER;'
+        query += 'GROUP BY ID HAVING COUNT(*) = ' + str(phrase.k) + ';'
         pid = self.query(query, print_values)
 
         if not pid and force_create:

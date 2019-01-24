@@ -9,21 +9,29 @@ class Text:
 
     def __init__(self, wrds=(), p=1):
         self.probability = p
-        self.words = []
+        self.words.clear()
         for w in wrds:
-            self.words.append(Word(w, self.probability))  # incluir checagem de igual
+            self.words.append(Word(w, self.probability))
+        self.words.append(self.get_word(-1))
+
+    def __del__(self):
+        self.clear()
+
+    def clear(self):
+        self.words.clear()
+        self.phrases.clear()
+        self.probability = 1  # probabilidade do texto
 
     def set_words(self, w=()):
         self.words = w
 
     def get_word(self, i):
-        try:
-            return self.words[i]
-        except IndexError:
-            return Word('', self.probability)
+        if i < 0 or i >= len(self.words):
+            return Word('_', self.probability)
+        return self.words[i]
 
     def build_phrases(self, k):
-        for i in range(len(self.words)):
+        for i in range(len(self.words) - 1):
             wrds = []
             for j in range(k):
                 w = self.get_word(i + j)

@@ -1,6 +1,8 @@
 from classes.text import Text
 from classes.db import DB
 import csv
+import os
+import datetime
 
 
 def finaliza():
@@ -14,6 +16,10 @@ def options(a):
     if int(a) == 1:
         a = input('Isso irá sobreescrever a base de agora, deseja continuar? S/N')
         if str.upper(a) in {'S', 'Y', '1'}:
+            try:
+                [os.remove(os.path.join("database/", f)) for f in os.listdir("database/") if f.endswith(".db")]
+            except IOError:
+                exit(-550)
             return train()
         return False
     elif int(a) in {2, 3}:
@@ -59,14 +65,24 @@ def train():
     if str.upper(a) in {'S', 'Y', '1'}:
         debug_mode = True
 
+    start = datetime.datetime.now()
+    db = DB(debug=debug_mode)
     with open(default, newline='', encoding='utf-8-sig') as csvfile:
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
         for row in reader:
             t = Text(str.split(str.upper(row[1])), row[0])
-            t.build_phrases(3)
-    db = DB(debug=debug_mode)
-    if t:
-        db.insert_text(t)
+            if t:
+                t.build_phrases(3)
+                t.print_phrases()
+                db.insert_text(t, True)
+                del t
+            else:
+                return -100
+
+    end = datetime.datetime.now()
+    print('Começou: ' + start.strftime("%H:%M:%S"))
+    print('Terminou: ' + end.strftime("%H:%M:%S"))
+    print('Delta: ' + str(end - start))
 
 
 main()

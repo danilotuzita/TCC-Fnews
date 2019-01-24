@@ -6,8 +6,11 @@ import datetime
 class DB:
     path = None
     filename = None
+
     debug = False
     debug_filename = None
+    terminal = None
+
     conn = None
     c = None
     tables = [
@@ -117,6 +120,7 @@ class DB:
     def get_word_id(self, word, force_create=False, print_values=False):
         wid = self.query('SELECT ID FROM WORDS WHERE WORD = \'' + word.value + '\';', print_values=print_values)
         if not wid and force_create:
+            if self.terminal: print(word.value)
             wid = self.insert_word_id(word)
         return wid
 
@@ -159,9 +163,18 @@ class DB:
                      str(phrase.alpha) + ');')
         self.commit()
 
-    def insert_text(self, text):
+    def insert_text(self, text, prnt=False):
+        self.terminal = prnt
+        if self.terminal:
+            print('---=== TEXTO ===---')
+            text.print_text()
+            print('--- Inserindo novas Palavras ---')
+        for words in text.words:
+            self.insert_word_prob(words)
+
+        if self.terminal:
+            print('--- FRASES ---')
         for phrase in text.phrases:
-            phrase.print()
-            for word in phrase.words:
-                self.insert_word_prob(word)
+            if self.terminal:
+                phrase.print()
             self.insert_phrase_prob(phrase)

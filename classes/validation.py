@@ -15,7 +15,7 @@ def validation_files_creation(number_of_slices, validation_slice):
         csv_reader = csv.reader(csv_file, delimiter=';')
 
         with open('../database/validation_tab.csv', mode='w') as validation_tab:
-            validation_tab = csv.writer(validation_tab, delimiter=';', quotechar='"', quoting=csv.QUOTE_NONE, escapechar='\\')
+            validation_tab = csv.writer(validation_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE, escapechar='')
             for row2 in csv_reader:
                 writer_line_count += 1
                 if writer_line_count <= (reader_line_count / number_of_slices)*validation_slice and writer_line_count > (reader_line_count / number_of_slices)*(validation_slice-1):
@@ -29,11 +29,11 @@ def validation_files_creation(number_of_slices, validation_slice):
         csv_reader = csv.reader(csv_file, delimiter=';')
 
         with open('../database/training_tab.csv', mode='w') as training_tab:
-            training_tab = csv.writer(training_tab, delimiter=';', quotechar='"', quoting=csv.QUOTE_NONE,
-                                        escapechar='\\')
+            training_tab = csv.writer(training_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE,
+                                        escapechar='')
             for row2 in csv_reader:
                 writer_line_count += 1
-                if writer_line_count > (reader_line_count / number_of_slices)*validation_slice and writer_line_count <= (reader_line_count / number_of_slices)*validation_slice:
+                if writer_line_count > (reader_line_count / number_of_slices)*validation_slice or writer_line_count <= (reader_line_count / number_of_slices)*(validation_slice-1):
                     training_tab.writerow([row2[0], row2[1]])
 
 
@@ -55,7 +55,7 @@ def validation_files_creation(number_of_slices, validation_slice):
 
 def main_validation():
 
-    validation_files_creation(5, 1)
+    validation_files_creation(5, 2)
 
 
 main_validation()

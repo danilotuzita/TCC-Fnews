@@ -147,6 +147,14 @@ class DB:
             pid = self.insert_new_phrase(phrase)
         return pid
 
+    def get_phrase_prob(self, phrase, default_return=0.5):
+        pid = self.get_phrase_id(phrase)
+        query = 'SELECT AVG(PROBABILITY) FROM PHRASES_PROB WHERE PHRASE_ID = ' + pid + ' GROUP BY PHRASE_ID;'
+        prob = self.query(query)
+        if not prob:
+            prob = default_return
+        return prob
+
     def insert_new_phrase(self, phrase):
         pid = self.query('SELECT MAX(ID) + 1 FROM PHRASES;')
         if not pid: pid = 1

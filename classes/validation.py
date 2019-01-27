@@ -11,10 +11,10 @@ def validation_files_creation(number_of_slices, validation_slice):
         for row in csv_reader:
             reader_line_count += 1
 
-    with open('../database/Tabela_TEST.csv') as csv_file:  # escreve tabela de validação
+    with open('../database/Tabela_TEST.csv', newline="") as csv_file:  # escreve tabela de validação
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open('../database/validation_tab.csv', mode='w') as validation_tab:
+        with open('../database/validation_tab.csv', mode='w', newline="") as validation_tab:
             validation_tab = csv.writer(validation_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE, escapechar='')
             for row2 in csv_reader:
                 writer_line_count += 1
@@ -28,7 +28,7 @@ def validation_files_creation(number_of_slices, validation_slice):
     with open('../database/Tabela_TEST.csv') as csv_file:  # escreve tabela de aprendizagem
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open('../database/training_tab.csv', mode='w') as training_tab:
+        with open('../database/training_tab.csv', mode='w', newline="") as training_tab:
             training_tab = csv.writer(training_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE,
                                         escapechar='')
             for row2 in csv_reader:

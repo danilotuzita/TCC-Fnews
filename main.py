@@ -1,5 +1,6 @@
 from classes.text import Text
 from classes.db import DB
+from pathlib import Path
 import csv
 import os
 import datetime
@@ -52,14 +53,34 @@ def backup():
 
 
 def train():
-    t = None
     default = 'database/treino.csv'
-    # a = input('Nome default da tabela de Treino: ' + default +
-    #           '\n1 - Continuar'
-    #           '\n2 - Mudar'
-    # )
+    a = input('Nome default da tabela de Treino: ' + default +
+              '\n1 - Continuar'
+              '\n2 - Mudar'
+              '\nSelecione uma opção: '
+    )
+    if str.upper(a) in {'S', 'Y', '1'}:
+        print('Continuando com a a tabela: ' + default)
+    else:
+        i = 1
+        filenames = []
+        for f in os.listdir(os.path.join(Path().absolute(), "database")):  # lendo todos os arquivos .csv em database/
+            if f.endswith(".csv"):
+                print(str(i) + ' - ' + f)
+                filenames.append(f)
+                i += 1
 
-    print('Nome default da tabela de Treino: ' + default)
+        while True:
+            a = input('Digite o numero da tabela que deseja usar: ')
+            a = int(a) - 1
+            if a == -1:
+                exit(0)
+            try:
+                default = filenames[a]
+                break
+            except IndexError:
+                print('Numero inválido. Se deseja sair digite 0.')
+
     a = input('Debug? S/N: ')
     debug_mode = False
     if str.upper(a) in {'S', 'Y', '1'}:
@@ -67,10 +88,10 @@ def train():
 
     start = datetime.datetime.now()
     db = DB(debug=debug_mode)
-    with open(default, newline='', encoding='utf-8-sig') as csvfile:
+    with open(default, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
-        for row in reader:
-            t = Text(str.split(str.upper(row[1])), row[0])
+        for row in reader:  # para cada linha
+            t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
             if t:
                 t.build_phrases(3)
                 t.print_phrases()
@@ -86,7 +107,3 @@ def train():
 
 
 main()
-
-# a = db.query(select_media, True)
-# input()
-

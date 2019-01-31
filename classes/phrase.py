@@ -25,7 +25,7 @@ class Phrase:
 
         print(p)
 
-    def inc_count(self):            #função para aumentar o contador de existencia da palavra
+    def inc_count(self):  # função para aumentar o contador de existencia da palavra
         self.count = self.count + 1
 
     def avg_prob(self, new_prob):

@@ -83,14 +83,15 @@ class DB:
         if commit:
             self.commit()
 
+    # le o cursor e retorna o valor fora de uma lista se o cursor for só uma linha
     def make_readable(self, cursor):
         length = len(cursor)
         if length > 0:
             lista = [list(row) for row in cursor]
-            if length == 1:
-                if len(lista[0]) == 1:
-                    return lista[0][0]
-                return lista[0]
+            if length == 1:  # se for só uma linha
+                if len(lista[0]) == 1:  # se for só um valor
+                    return lista[0][0]  # retorna só o valor
+                return lista[0]  # retorna a linha
             return lista
         else:
             return None
@@ -117,36 +118,41 @@ class DB:
     def commit(self):
         self.conn.commit()
 
+    # retorna o id de uma palavra / param: force_create - cria a palavra na base se não existir
     def get_word_id(self, word, force_create=False, print_values=False):
         wid = self.query('SELECT ID FROM WORDS WHERE WORD = \'' + word.value + '\';', print_values=print_values)
-        if not wid and force_create:
+        if not wid and force_create:  # checa se a palavra existe e se deve ser criada
             if self.terminal: print(word.value)
             wid = self.insert_word_id(word)
         return wid
 
+    # cria uma nova palavra na base
     def insert_word_id(self, word):
         self.execute('INSERT OR IGNORE INTO WORDS (WORD) VALUES(\'' + word.value + '\');')
         self.commit()
         return self.get_word_id(word)
 
+    # insere uma palavra x probabilidade na base
     def insert_word_prob(self, word):
         wid = self.get_word_id(word, force_create=True)
         self.execute('INSERT INTO WORDS_PROB VALUES (' + str(wid) + ', ' + str(word.probability) + ');')
         self.commit()
 
+    # retorna o id de uma frase / param: force_create - cria a frase na base se não existir
     def get_phrase_id(self, phrase, force_create=False, print_values=False):
         query = 'SELECT ID FROM PHRASES WHERE '
-        for i, word in enumerate(phrase.words):
+        for i, word in enumerate(phrase.words):  # criando a query de busca
             if i: query += 'OR '
             wid = self.get_word_id(word)
             query += '(WORD_ID = ' + str(wid) + ' AND WORD_ORDER = ' + str(i) + ') '
         query += 'GROUP BY ID HAVING COUNT(*) = ' + str(phrase.k) + ';'
         pid = self.query(query, print_values)
 
-        if not pid and force_create:
+        if not pid and force_create:   # checa se a frase existe e se deve ser criada
             pid = self.insert_new_phrase(phrase)
         return pid
 
+    # retorna a probabilidade de uma frase / param: default_return - valor que deve retornar caso a frase não exista
     def get_phrase_prob(self, phrase, default_return=0.5):
         pid = self.get_phrase_id(phrase)
         query = 'SELECT AVG(PROBABILITY) FROM PHRASES_PROB WHERE PHRASE_ID = ' + pid + ' GROUP BY PHRASE_ID;'
@@ -155,6 +161,7 @@ class DB:
             prob = default_return
         return prob
 
+    # cria uma nova frase na base
     def insert_new_phrase(self, phrase):
         pid = self.query('SELECT MAX(ID) + 1 FROM PHRASES;')
         if not pid: pid = 1
@@ -164,6 +171,7 @@ class DB:
         self.commit()
         return pid
 
+    # insere uma frase x probabilidade na base
     def insert_phrase_prob(self, phrase):
         pid = self.get_phrase_id(phrase, force_create=True)
         self.execute('INSERT INTO PHRASES_PROB VALUES (' + str(pid) + ', ' +
@@ -171,18 +179,19 @@ class DB:
                      str(phrase.alpha) + ');')
         self.commit()
 
+    # insere um texto de forma safe
     def insert_text(self, text, prnt=False):
         self.terminal = prnt
         if self.terminal:
             print('---=== TEXTO ===---')
             text.print_text()
             print('--- Inserindo novas Palavras ---')
-        for words in text.words:
+        for words in text.words:  # insere todas palavras x probabilidade do texto na base
             self.insert_word_prob(words)
 
         if self.terminal:
             print('--- FRASES ---')
-        for phrase in text.phrases:
+        for phrase in text.phrases:  # insere todas as frases x probabilidade
             if self.terminal:
                 phrase.print()
             self.insert_phrase_prob(phrase)

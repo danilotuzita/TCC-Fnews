@@ -158,7 +158,7 @@ class DB:
         pid = self.get_phrase_id(phrase)
         if not pid:
             return default_return
-        query = 'SELECT AVG(PROBABILITY) FROM PHRASES_PROB WHERE PHRASE_ID = ' + pid + ' GROUP BY PHRASE_ID;'
+        query = 'SELECT AVG(PROBABILITY) FROM PHRASES_PROB WHERE PHRASE_ID = ' + str(pid) + ' GROUP BY PHRASE_ID;'
         return self.query(query)
 
     # cria uma nova frase na base

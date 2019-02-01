@@ -1,6 +1,9 @@
 #criar csv com os textos de treinamento
 
 import csv
+from classes.text import Text
+from classes.db import DB
+
 
 def validation_files_creation(number_of_slices, validation_slice):
 
@@ -41,6 +44,36 @@ def validation_files_creation(number_of_slices, validation_slice):
 
 # definir dados lidos pelo main.py (enviando caminho do .csv de treinamento)
 # leer dados da base alimentada pelo sistema principal
+
+#construir  texto baseado no arquivo de validação
+
+def validation_text_comparison():
+    DB_V = DB(path='../database/',debug=True)
+
+    with open('../database/training_tab.csv') as csv_file:  # conta a quantidade de linhas no arquivo original
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            t = Text(str.split(str.upper(row[1])), row[0])
+            prob = 0.5
+            if t:
+                t.build_phrases(3) #construir frases
+                for p in t.phrases:
+                    prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                print("====")
+                print(row)
+                print(t.probability)
+                print(row[0])
+                print(prob)
+                del t
+            else:
+                return -100
+
+
+
+#calcular veracidade do texto
+
+#comparar com veracidade pre classificada
+
 # validar dados com a base de validação (receber score = taxa de verdadeiros positivos)
 # enviar score e um csv com as probabilidades e os alfas para o firefly
 # por x iterações:
@@ -56,6 +89,7 @@ def validation_files_creation(number_of_slices, validation_slice):
 def main_validation():
 
     validation_files_creation(5, 2)
+    validation_text_comparison()
 
 
 main_validation()

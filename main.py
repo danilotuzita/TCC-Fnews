@@ -67,7 +67,7 @@ def train():
         for f in os.listdir(os.path.join(Path().absolute(), "database")):  # lendo todos os arquivos .csv em database/
             if f.endswith(".csv"):
                 print(str(i) + ' - ' + f)
-                filenames.append(f)
+                filenames.append('database/' + f)
                 i += 1
 
         while True:

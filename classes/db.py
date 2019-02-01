@@ -144,6 +144,7 @@ class DB:
         for i, word in enumerate(phrase.words):  # criando a query de busca
             if i: query += 'OR '
             wid = self.get_word_id(word)
+            if not wid: return None
             query += '(WORD_ID = ' + str(wid) + ' AND WORD_ORDER = ' + str(i) + ') '
         query += 'GROUP BY ID HAVING COUNT(*) = ' + str(phrase.k) + ';'
         pid = self.query(query, print_values)
@@ -155,11 +156,10 @@ class DB:
     # retorna a probabilidade de uma frase / param: default_return - valor que deve retornar caso a frase não exista
     def get_phrase_prob(self, phrase, default_return=0.5):
         pid = self.get_phrase_id(phrase)
+        if not pid:
+            return default_return
         query = 'SELECT AVG(PROBABILITY) FROM PHRASES_PROB WHERE PHRASE_ID = ' + pid + ' GROUP BY PHRASE_ID;'
-        prob = self.query(query)
-        if not prob:
-            prob = default_return
-        return prob
+        return self.query(query)
 
     # cria uma nova frase na base
     def insert_new_phrase(self, phrase):

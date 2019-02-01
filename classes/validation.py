@@ -59,6 +59,7 @@ def validation_text_comparison():
                 t.build_phrases(3) #construir frases
                 for p in t.phrases:
                     prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                    prob = 1 - prob
                 print("====")
                 print(row)
                 print(t.probability)

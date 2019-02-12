@@ -1,9 +1,15 @@
 from classes.text import Text
 from classes.db import DB
 from pathlib import Path
+from classes.Firefly import lplFirefly as Firefly
+import datetime
 import csv
 import os
-import datetime
+
+
+def call_firefly():
+    db = DB()
+    fireflies = Firefly(db.get_phrase_count())
 
 
 def finaliza():

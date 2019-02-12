@@ -138,6 +138,9 @@ class DB:
         self.execute('INSERT INTO WORDS_PROB VALUES (' + str(wid) + ', ' + str(word.probability) + ');')
         self.commit()
 
+    def get_phrase_count(self):
+        return self.query('SELECT COUNT(*) FROM PHRASES;')
+
     # retorna o id de uma frase / param: force_create - cria a frase na base se não existir
     def get_phrase_id(self, phrase, force_create=False, print_values=False):
         query = 'SELECT ID FROM PHRASES WHERE '
@@ -195,3 +198,12 @@ class DB:
             if self.terminal:
                 phrase.print()
             self.insert_phrase_prob(phrase)
+
+    def update_alpha(self, i, alpha):
+        self.execute('UPDATE PHRASES_PROB SET ALPHA = ' + alpha + ' WHERE PHRASE_ID = ' + i + ';')
+        self.commit()
+
+
+    def update_firefly(self, firefly):
+        for i, alpha in enumerate(firefly):
+            self.update_alpha(i, alpha)

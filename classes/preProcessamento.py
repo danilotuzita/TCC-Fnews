@@ -2,6 +2,10 @@ import xlrd
 import xlwt
 
 
+def brilho(firefly):
+    return 1
+
+
 def replacing(cell, words):                                                     #recebe o conteúdo da célula e a lista de stop words
     for x in range(0, len(words)):                                              #enquanto houverem stop words a serem lidas
         oldWord = ' ' + words[x][0] + ' '                                       #removendo stop words no meio da frase

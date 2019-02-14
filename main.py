@@ -1,3 +1,4 @@
+# encoding: utf-8
 from classes.text import Text
 from classes.db import DB
 from pathlib import Path
@@ -9,8 +10,8 @@ import os
 
 def call_firefly():
     db = DB()
-    fireflies = Firefly(db.get_phrase_count())
-
+    # fireflies = Firefly(db.get_phrase_count())
+    fireflies = Firefly(10)
 
 def finaliza():
     a = input('Deseja fechar o programa? S/N')
@@ -112,4 +113,5 @@ def train():
     print('Delta: ' + str(end - start))
 
 
-main()
+# main()
+call_firefly()

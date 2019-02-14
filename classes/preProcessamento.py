@@ -1,10 +1,6 @@
+# encoding: utf-8
 import xlrd
 import xlwt
-
-
-def brilho(firefly):
-    return 1
-
 
 def replacing(cell, words):                                                     #recebe o conteúdo da célula e a lista de stop words
     for x in range(0, len(words)):                                              #enquanto houverem stop words a serem lidas

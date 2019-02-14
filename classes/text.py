@@ -1,3 +1,4 @@
+# encoding: utf-8
 from classes.word import Word
 from classes.phrase import Phrase
 
@@ -46,7 +47,8 @@ class Text:
 
     def print_phrases(self):
         for p in self.phrases:
-            p.print()
+            return
+            # p.print()
 
     def print_text(self):
         p = '"'

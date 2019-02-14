@@ -1,10 +1,11 @@
-from classes.preProcessamento import brilho
+# encoding: utf-8
+from classes.validation import brilho
 import random
 import math
 import numpy as np
 
 
-def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
+def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100):
     """"
     :param n: number of agents
     :param d: dimension
@@ -29,6 +30,8 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
         threshold.sort()
         fireflies.append(threshold)
 
+    print(fireflies)
+
     # Iterations or pseudo time marching
     r = []
     for i in range(n):
@@ -40,11 +43,12 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
     while t < maxGenerarion:  # Start iterations
         for i in range(n):
             Z[i] = brilho(fireflies[i])
+        print("brilho", Z)
 
         indice = np.argsort(Z)
         Z.sort()
 
-        # Z = [-x for x in Z]
+        Z = [-x for x in Z]
 
         # Ranking the fireflies by their light intensity
         rank = [0]*n
@@ -61,6 +65,7 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
 
         # Move all fireflies to the better locations
         for i in range(n):
+            threshold = []
             for j in range(n):
                 if Z[i] < Z[j]:
                     for k in range(d):
@@ -72,8 +77,10 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
                     if i != n-1:
 
                         for k in range(d):
-                            fireflies[i][k] = int(((1 - betat)*fireflies[i][k] + betat*fireflies[j][k] +
-                                                     alphat*threshold[k])/(1+alphat))
+                            fireflies[i][k] = ((1 - betat)*fireflies[i][k] + betat*fireflies[j][k] +
+                                                     alphat*threshold[k]/(1+alphat))
+
+        print(fireflies)
 
         bests = fireflies[0]
 
@@ -81,12 +88,14 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=2):
 
     bests.sort()
 
+    print("bests", bests)
+
     return bests
 
 
 def dist(a, b):
     S = 0
     for k in range(len(a)):
-        S += (a[k] - b[k]) ** 2
+        S += (b[k] - a[k]) ** 2
     S = math.sqrt(S)
     return S

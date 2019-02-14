@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Word:
     value = ""  # palavra
     probability = 1  # probabilidade da palavra

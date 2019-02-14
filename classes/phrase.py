@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Phrase:
     k = 1  # tamanho da frase???
     words = []  # conjunto de palavras

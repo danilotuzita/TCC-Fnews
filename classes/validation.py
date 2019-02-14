@@ -1,9 +1,15 @@
 #criar csv com os textos de treinamento
-
+# encoding: utf-8
 import csv
 from classes.text import Text
 from classes.db import DB
+import random
 
+def brilho(firefly):
+    b = 0
+    for i in range(len(firefly)):
+        b += firefly[i]
+    return b
 
 def validation_files_creation(number_of_slices, validation_slice):
 
@@ -93,5 +99,5 @@ def main_validation():
     validation_text_comparison()
 
 
-main_validation()
+# main_validation()
 

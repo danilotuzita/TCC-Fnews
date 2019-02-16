@@ -2,7 +2,7 @@
 import sqlite3
 import os
 import datetime
-
+from classes.phrase import Phrase
 
 class DB:
     path = None
@@ -14,6 +14,11 @@ class DB:
 
     conn = None
     c = None
+
+    relevancy_min_count = 1
+    relevancy_roof = 0.3
+    relevancy_floor = 0.7
+
     tables = [
         "CREATE TABLE IF NOT EXISTS WORDS ("
         "    ID INTEGER PRIMARY KEY,"
@@ -85,7 +90,8 @@ class DB:
             self.commit()
 
     # le o cursor e retorna o valor fora de uma lista se o cursor for só uma linha
-    def make_readable(self, cursor):
+    @staticmethod
+    def make_readable(cursor):
         length = len(cursor)
         if length > 0:
             lista = [list(row) for row in cursor]
@@ -204,7 +210,49 @@ class DB:
         self.execute('UPDATE PHRASES_PROB SET ALPHA = ' + alpha + ' WHERE PHRASE_ID = ' + i + ';')
         self.commit()
 
-
     def update_firefly(self, firefly):
         for i, alpha in enumerate(firefly):
             self.update_alpha(i, alpha)
+
+    def set_relevancy_params(self, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
+        """"
+        :param count: numero minimo de vezes que a frase foi citada
+        :param roof: topo do minimo
+        :param floor: chão do maximo
+        """
+        self.relevancy_min_count = count
+        self.relevancy_roof = roof
+        self.relevancy_floor = floor
+
+    def get_relevant_phrases(self, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
+        """"
+        retorna ids das frases relevantes
+        :param count: numero minimo de vezes que a frase foi citada
+        :param roof: topo do minimo
+        :param floor: chão do maximo
+        """
+        return self.query(
+            'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID '
+            'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
+            ' AND AVG(PROBABILITY) NOT BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
+        )
+
+    def is_relevant_phrase(self, phrase, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
+        """"
+        :param phrase: id da frase<int> ou Phrase
+        :param count: numero minimo de vezes que a frase foi citada
+        :param roof: topo do minimo
+        :param floor: chão do maximo
+        """
+        if type(phrase) is Phrase:
+            phrase = self.get_phrase_id(phrase)
+
+        if type(phrase) is int:
+                return self.query(
+                    'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID'
+                    'WHERE PHRASE_ID = ' + str(phrase) +
+                    'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
+                    ' AND AVG(PROBABILITY) NOT BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
+                )
+        return -1
+    

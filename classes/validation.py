@@ -56,7 +56,7 @@ def validation_files_creation(number_of_slices, validation_slice):
 def validation_text_comparison():
     DB_V = DB(path='../database/',debug=True)
 
-    with open('../database/training_tab.csv') as csv_file:  # conta a quantidade de linhas no arquivo original
+    with open('../database/training_tab.csv',  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
             t = Text(str.split(str.upper(row[1])), row[0])

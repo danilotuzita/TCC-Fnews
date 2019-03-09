@@ -55,31 +55,46 @@ def validation_files_creation(number_of_slices, validation_slice): #numero de di
 
 #construir texto baseado no arquivo de validação
 
-def validation_text_comparison(data_validation_source):
+def validation_text_comparison(data_validation_source, report_flag, training_file): #fonte de validação e flag para relatório de teste e arquivo de treinamento
     DB_V = DB(path='../database/',debug=True)
     now = datetime.datetime.now()
+    positive_error = 0 #erro positivo
+    negative_error = 0 #erro negativo
+    sentence_counter = 0
     with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open("report_%d_%d_%d.out" %now.day %now.month %now.year, "w") as report: #abre arquivo de relatório
-            orig_stdout = sys.stdout # guarda saida padrão
-            sys.stdout = report # troca saida padrão por relatório
-            for row in csv_reader:
-                t = Text(str.split(str.upper(row[1])), row[0])
-                prob = 0.5
-                if t:
-                    t.build_phrases(3) #construir frases
-                    for p in t.phrases:
-                        prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
-                        prob = 1 - prob
-                    print("====")
-                    print(row)
-                    print(t.probability)
-                    print(row[0])
-                    print(prob)
-                    del t
-                else:
-                    return -100
+        if report_flag:
+            with open("../reports/report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second) + ".out", "w") as report: #abre arquivo de relatório
+                orig_stdout = sys.stdout # guarda saida padrão
+                sys.stdout = report # troca saida padrão por relatório
+                print("Data:    (DD/MM/AAAA)" + str(now.day) + "/" + str(now.month) + "/" + str(now.year))
+                print("Hora:    (HH:MM:SS)" + str(now.hour) + ":" + str(now.minute) + ":" + str(now.second))
+                print("Training_File:   " + training_file)
+                print("Validation_File: " + data_validation_source)
+                for row in csv_reader:
+                    sentence_counter += 1
+                    t = Text(str.split(str.upper(row[1])), row[0])
+                    prob = 0.5
+                    if t:
+                        t.build_phrases(3) #construir frases
+                        for p in t.phrases:
+                            prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                            prob = 1 - prob
+                        print(row) #imprime texto
+                        print(t.probability) #imprime probabilidade do texto
+                        print(prob) #imprime probabilidade calculada
+                        error = float(t.probability) - prob;
+                        if error > 0:
+                            positive_error += error
+                        else:
+                            negative_error += error
+                        del t
+                    else:
+                        return -100
+                print("Numero de frases:    " + str(sentence_counter))
+                print("Erro positivo:   " + str(positive_error))
+                print("Erro negativo:   " + str(negative_error))
         sys.stdout = orig_stdout    # reseta saída
         report.close()  #fechar arquivo de relatório
 
@@ -104,7 +119,7 @@ def main_validation():
 
 
     validation_files_creation(5, 2)
-    validation_text_comparison('../database/training_tab.csv')
+    validation_text_comparison('../database/training_tab.csv', True, '../database/training_tab.csv')
 
 
 main_validation()

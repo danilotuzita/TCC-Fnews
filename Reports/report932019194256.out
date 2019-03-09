@@ -1,0 +1,12 @@
+Data:    (DD/MM/AAAA)9/3/2019
+Hora:    (HH:MM:SS)19:42:56
+Training_File:   ../database/training_tab.csv
+Validation_File: ../database/training_tab.csv
+['0', 'Says the Annies List political group supports third-trimester abortions on demand.']
+0
+0
+0.5
+['0.5', 'When did the decline of coal start? It started when natural gas took off that started to begin in (President George W.) Bushs administration.']
+0.5
+0.5
+0.6666666567325592

@@ -6,6 +6,7 @@ from classes.db import DB
 import random
 import datetime
 import sys
+import os
 
 def brilho(firefly):
     b = 0
@@ -13,19 +14,19 @@ def brilho(firefly):
         b += firefly[i]
     return b
 
-def validation_files_creation(number_of_slices, validation_slice): #numero de divisões do arquivo de entrada e divisão selecionada para validação
+def validation_files_creation(number_of_slices, validation_slice, source_file, output_directory): #numero de divisões do arquivo de entrada e divisão selecionada para validação
 
-    with open('../database/Tabela_TEST.csv') as csv_file:  # conta a quantidade de linhas no arquivo original
+    with open(source_file) as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
         reader_line_count = 0
         writer_line_count = 0
         for row in csv_reader:
             reader_line_count += 1
 
-    with open('../database/Tabela_TEST.csv', newline="") as csv_file:  # escreve tabela de validação
+    with open(source_file, newline="") as csv_file:  # escreve tabela de validação
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open('../database/validation_tab.csv', mode='w', newline="") as validation_tab:
+        with open(output_directory + '/validation_tab.csv', mode='w', newline="") as validation_tab:
             validation_tab = csv.writer(validation_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE, escapechar='')
             for row2 in csv_reader:
                 writer_line_count += 1
@@ -36,10 +37,10 @@ def validation_files_creation(number_of_slices, validation_slice): #numero de di
 
     # criar csv com os textos de aprendizado
 
-    with open('../database/Tabela_TEST.csv') as csv_file:  # escreve tabela de aprendizagem
+    with open(source_file) as csv_file:  # escreve tabela de aprendizagem
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open('../database/training_tab.csv', mode='w', newline="") as training_tab:
+        with open(output_directory + '/training_tab.csv', mode='w', newline="") as training_tab:
             training_tab = csv.writer(training_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE,
                                         escapechar='')
             for row2 in csv_reader:
@@ -55,7 +56,7 @@ def validation_files_creation(number_of_slices, validation_slice): #numero de di
 
 #construir texto baseado no arquivo de validação
 
-def validation_text_comparison(data_validation_source, report_flag, training_file): #fonte de validação e flag para relatório de teste e arquivo de treinamento
+def validation_text_comparison(data_validation_source, report_flag, training_file, report_name): #fonte de validação e flag para relatório de teste e arquivo de treinamento
     DB_V = DB(path='../database/',debug=True)
     now = datetime.datetime.now()
     positive_error = 0 #erro positivo
@@ -64,8 +65,8 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
     with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        if report_flag:
-            with open("../reports/report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second) + ".out", "w") as report: #abre arquivo de relatório
+        if report_flag: #caso a flag de relatório esteja ativada
+            with open("../reports/" + report_name + "/report.out", "w") as report: #abre arquivo de relatório
                 orig_stdout = sys.stdout # guarda saida padrão
                 sys.stdout = report # troca saida padrão por relatório
                 print("Data:    (DD/MM/AAAA)" + str(now.day) + "/" + str(now.month) + "/" + str(now.year))
@@ -95,9 +96,98 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                 print("Numero de frases:    " + str(sentence_counter))
                 print("Erro positivo:   " + str(positive_error))
                 print("Erro negativo:   " + str(negative_error))
-        sys.stdout = orig_stdout    # reseta saída
-        report.close()  #fechar arquivo de relatório
+            sys.stdout = orig_stdout    # reseta saída
+            report.close()  #fechar arquivo de relatório
 
+        else: #caso a flag de relatório esteja desativada
+                for row in csv_reader:
+                    t = Text(str.split(str.upper(row[1])), row[0])
+                    prob = 0.5
+                    if t:
+                        t.build_phrases(3) #construir frases
+                        for p in t.phrases:
+                            prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                            prob = 1 - prob
+                        del t
+                    else:
+                        return -100
+
+def validation_generate_reportname():
+    now = datetime.datetime.now()
+    return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second)
+
+
+def validation_report_directory(directory_name):
+    os.mkdir(directory_name)
+
+def validation_train(source_name):
+    default = 'database/treino.csv'
+    a = input('Nome default da tabela de Treino: ' + default +
+              '\n1 - Continuar'
+              '\n2 - Mudar'
+              '\nSelecione uma opção: '
+              )
+    if str.upper(a) in {'S', 'Y', '1'}:
+        print('Continuando com a a tabela: ' + default)
+    else:
+        i = 1
+        filenames = []
+        for f in os.listdir(os.path.join(Path().absolute(), "database")):  # lendo todos os arquivos .csv em database/
+            if f.endswith(".csv"):
+                print(str(i) + ' - ' + f)
+                filenames.append('database/' + f)
+                i += 1
+
+        while True:
+            a = input('Digite o numero da tabela que deseja usar: ')
+            a = int(a) - 1
+            if a == -1:
+                exit(0)
+            try:
+                default = filenames[a]
+                break
+            except IndexError:
+                print('Numero inválido. Se deseja sair digite 0.')
+
+    a = input('Debug? S/N: ')
+    debug_mode = False
+    if str.upper(a) in {'S', 'Y', '1'}:
+        debug_mode = True
+
+    # inicio do treino ===============================
+    start = datetime.datetime.now()
+    db = DB(debug=debug_mode)
+    with open(default, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+        reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)  # leitura do arquivo
+        for row in reader:  # para cada linha
+            t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
+            if t:
+                t.build_phrases(3)
+                t.print_phrases()
+                db.insert_text(t, True)
+                del t
+            else:
+                return -100
+
+    end = datetime.datetime.now()
+    print('Começou: ' + start.strftime("%H:%M:%S"))
+    print('Terminou: ' + end.strftime("%H:%M:%S"))
+    print('Delta: ' + str(end - start))
+
+    # fim do treino
+
+
+def main_validation():
+    report_name = validation_generate_reportname() # gera nome do relatório
+    validation_report_directory("../reports/" + report_name) # cria diretório do relatório
+    validation_files_creation(5, 2, '../database/Tabela_TEST.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
+#    validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento-corrigir
+    validation_text_comparison('../reports/' + report_name + '/training_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name)
+
+
+main_validation()
+
+#anotações:
 
 #calcular veracidade do texto
 
@@ -114,13 +204,3 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
 # aaaaa
 
 #funcao principal de validacao
-
-def main_validation():
-
-
-    validation_files_creation(5, 2)
-    validation_text_comparison('../database/training_tab.csv', True, '../database/training_tab.csv')
-
-
-main_validation()
-

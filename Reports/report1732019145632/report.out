@@ -1,0 +1,37 @@
+Data:    (DD/MM/AAAA)17/3/2019
+Hora:    (HH:MM:SS)14:56:32
+Training_File:   ../reports/report1732019145632/training_tab.csv
+Validation_File: ../reports/report1732019145632/validation_tab.csv
+['0', 'Says the Annies List political group supports third-trimester abortions on demand.']
+0
+0.66650390625
+['0.5', 'When did the decline of coal start? It started when natural gas took off that started to begin in (President George W.) Bushs administration.']
+0.5
+0.6666666865348816
+['0.75', 'Hillary Clinton agrees with John McCain by voting to give George Bush the benefit of the doubt on Iran.']
+0.75
+0.6666660308837891
+['0', 'Health care reform legislation is likely to mandate free sex change surgeries.']
+0
+0.666748046875
+['0.5', 'The economic turnaround started at the end of my term.']
+0.5
+0.6669921875
+['1', 'The Chicago Bears have had more starting quarterbacks in the last 10 years than the total number of tenured (UW) faculty fired during the last two decades.']
+1
+0.6666666641831398
+['0.25', 'Jim Dunnam has not lived in the district he represents for years now.']
+0.25
+0.6666259765625
+['0.5', 'Im the only person on this stage who has worked actively just last year passing along with Russ Feingold some of the toughest ethics reform since Watergate.']
+0.5
+0.6666666641831398
+['0.5', 'However it took $19.5 million in Oregon Lottery funds for the Port of Newport to eventually land the new NOAA Marine Operations Center-Pacific.']
+0.5
+0.6666666269302368
+['0.75', 'Says GOP primary opponents Glenn Grothman and Joe Leibham cast a compromise vote that cost $788 million in higher electricity costs.']
+0.75
+0.6666665077209473
+Numero de frases:    10
+Erro positivo:   0.5000007972121239
+Erro negativo:   -2.416870094835758

@@ -3,6 +3,7 @@
 import csv
 from classes.text import Text
 from classes.db import DB
+from pathlib import Path
 import random
 import datetime
 import sys
@@ -76,11 +77,17 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                 for row in csv_reader:
                     sentence_counter += 1
                     t = Text(str.split(str.upper(row[1])), row[0])
-                    prob = 0.5
                     if t:
                         t.build_phrases(3) #construir frases
+                        first = 0
+                        prob = 0
                         for p in t.phrases:
-                            prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                            if first != 0:
+                                prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
+
+                            else:
+                                prob = (1- DB_V.get_phrase_prob(p)) # busca probabilidade da primeira frase
+                                first = 1
                             prob = 1 - prob
                         print(row) #imprime texto
                         print(t.probability) #imprime probabilidade do texto
@@ -100,14 +107,21 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
             report.close()  #fechar arquivo de relatório
 
         else: #caso a flag de relatório esteja desativada
-                for row in csv_reader:
-                    t = Text(str.split(str.upper(row[1])), row[0])
-                    prob = 0.5
-                    if t:
-                        t.build_phrases(3) #construir frases
-                        for p in t.phrases:
-                            prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
-                            prob = 1 - prob
+            for row in csv_reader:
+                sentence_counter += 1
+                t = Text(str.split(str.upper(row[1])), row[0])
+                if t:
+                    t.build_phrases(3)  # construir frases
+                    first = 0
+                    for p in t.phrases:
+                        if first != 0:
+                            prob = prob * (1 - DB_V.get_phrase_prob(
+                                p))  # busca a probabilidade associada à frase e calcula probabilidade do texto
+
+                        else:
+                            prob = (1 - DB_V.get_phrase_prob(p))  # busca probabilidade da primeira frase
+                            first = 1
+                        prob = 1 - prob
                         del t
                     else:
                         return -100
@@ -121,43 +135,11 @@ def validation_report_directory(directory_name):
     os.mkdir(directory_name)
 
 def validation_train(source_name):
-    default = 'database/treino.csv'
-    a = input('Nome default da tabela de Treino: ' + default +
-              '\n1 - Continuar'
-              '\n2 - Mudar'
-              '\nSelecione uma opção: '
-              )
-    if str.upper(a) in {'S', 'Y', '1'}:
-        print('Continuando com a a tabela: ' + default)
-    else:
-        i = 1
-        filenames = []
-        for f in os.listdir(os.path.join(Path().absolute(), "database")):  # lendo todos os arquivos .csv em database/
-            if f.endswith(".csv"):
-                print(str(i) + ' - ' + f)
-                filenames.append('database/' + f)
-                i += 1
-
-        while True:
-            a = input('Digite o numero da tabela que deseja usar: ')
-            a = int(a) - 1
-            if a == -1:
-                exit(0)
-            try:
-                default = filenames[a]
-                break
-            except IndexError:
-                print('Numero inválido. Se deseja sair digite 0.')
-
-    a = input('Debug? S/N: ')
-    debug_mode = False
-    if str.upper(a) in {'S', 'Y', '1'}:
-        debug_mode = True
 
     # inicio do treino ===============================
     start = datetime.datetime.now()
-    db = DB(debug=debug_mode)
-    with open(default, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+    db = DB("../database/", "database", False)
+    with open(source_name, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)  # leitura do arquivo
         for row in reader:  # para cada linha
             t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
@@ -168,24 +150,22 @@ def validation_train(source_name):
                 del t
             else:
                 return -100
-
     end = datetime.datetime.now()
     print('Começou: ' + start.strftime("%H:%M:%S"))
     print('Terminou: ' + end.strftime("%H:%M:%S"))
     print('Delta: ' + str(end - start))
-
     # fim do treino
 
 
-def main_validation():
+def main_validation(source):
     report_name = validation_generate_reportname() # gera nome do relatório
     validation_report_directory("../reports/" + report_name) # cria diretório do relatório
-    validation_files_creation(5, 2, '../database/Tabela_TEST.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
-#    validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento-corrigir
-    validation_text_comparison('../reports/' + report_name + '/training_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name)
+    validation_files_creation(5, 1, '../database/' + source + '.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
+    validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento-corrigir
+    validation_text_comparison('../reports/' + report_name + '/validation_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name)
 
 
-main_validation()
+main_validation('LIAR_1_1000')
 
 #anotações:
 

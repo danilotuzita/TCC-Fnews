@@ -1,0 +1,828 @@
+Data:    (DD/MM/AAAA)29/3/2019
+Hora:    (HH:MM:SS)20:58:45
+Training_File:   ../reports/report2932019205845/training_tab.csv
+Validation_File: ../reports/report2932019205845/training_tab.csv
+Palavra: FOR
+Palavra: THE
+Palavra: FIRST
+Palavra: TIME
+Palavra: IN
+Palavra: HISTORY
+Palavra: THE
+Palavra: SHARE
+Palavra: OF
+Palavra: THE
+Palavra: NATIONAL
+Palavra: POPULAR
+Palavra: VOTE
+Palavra: MARGIN
+Palavra: IS
+Palavra: SMALLER
+Palavra: THAN
+Palavra: THE
+Palavra: LATINO
+Palavra: VOTE
+Palavra: MARGIN.
+['0.75', 'For the first time in history the share of the national popular vote margin is smaller than the Latino vote margin.']
+0.75
+0.7999999999999545
+Palavra: SINCE
+Palavra: 2000
+Palavra: NEARLY
+Palavra: 12
+Palavra: MILLION
+Palavra: AMERICANS
+Palavra: HAVE
+Palavra: SLIPPED
+Palavra: OUT
+Palavra: OF
+Palavra: THE
+Palavra: MIDDLE
+Palavra: CLASS
+Palavra: AND
+Palavra: INTO
+Palavra: POVERTY.
+['0.5', 'Since 2000 nearly 12 million Americans have slipped out of the middle class and into poverty.']
+0.5
+0.6666717529296875
+Palavra: WHEN
+Palavra: MITT
+Palavra: ROMNEY
+Palavra: WAS
+Palavra: GOVERNOR
+Palavra: OF
+Palavra: MASSACHUSETTS
+Palavra: WE
+Palavra: DIDNT
+Palavra: JUST
+Palavra: SLOW
+Palavra: THE
+Palavra: RATE
+Palavra: OF
+Palavra: GROWTH
+Palavra: OF
+Palavra: OUR
+Palavra: GOVERNMENT
+Palavra: WE
+Palavra: ACTUALLY
+Palavra: CUT
+Palavra: IT.
+['0', 'When Mitt Romney was governor of Massachusetts we didnt just slow the rate of growth of our government we actually cut it.']
+0
+1.0
+Palavra: THE
+Palavra: ECONOMY
+Palavra: BLED
+Palavra: $24
+Palavra: BILLION
+Palavra: DUE
+Palavra: TO
+Palavra: THE
+Palavra: GOVERNMENT
+Palavra: SHUTDOWN.
+['0.75', 'The economy bled $24 billion due to the government shutdown.']
+0.75
+0.8000001907348633
+Palavra: MOST
+Palavra: OF
+Palavra: THE
+Palavra: (AFFORDABLE
+Palavra: CARE
+Palavra: ACT)
+Palavra: HAS
+Palavra: ALREADY
+Palavra: IN
+Palavra: SOME
+Palavra: SENSE
+Palavra: BEEN
+Palavra: WAIVED
+Palavra: OR
+Palavra: OTHERWISE
+Palavra: SUSPENDED.
+['0.25', 'Most of the (Affordable Care Act) has already in some sense been waived or otherwise suspended.']
+0.25
+0.575723969610408
+Palavra: IN
+Palavra: THIS
+Palavra: LAST
+Palavra: ELECTION
+Palavra: IN
+Palavra: NOVEMBER
+Palavra: ...
+Palavra: 63
+Palavra: PERCENT
+Palavra: OF
+Palavra: THE
+Palavra: AMERICAN
+Palavra: PEOPLE
+Palavra: CHOSE
+Palavra: NOT
+Palavra: TO
+Palavra: VOTE
+Palavra: ...
+Palavra: 80
+Palavra: PERCENT
+Palavra: OF
+Palavra: YOUNG
+Palavra: PEOPLE
+Palavra: (AND)
+Palavra: 75
+Palavra: PERCENT
+Palavra: OF
+Palavra: LOW-INCOME
+Palavra: WORKERS
+Palavra: CHOSE
+Palavra: NOT
+Palavra: TO
+Palavra: VOTE.
+['0.5', 'In this last election in November ... 63 percent of the American people chose not to vote ... 80 percent of young people (and) 75 percent of low-income workers chose not to vote.']
+0.5
+0.6666666765813716
+Palavra: MCCAIN
+Palavra: OPPOSED
+Palavra: A
+Palavra: REQUIREMENT
+Palavra: THAT
+Palavra: THE
+Palavra: GOVERNMENT
+Palavra: BUY
+Palavra: AMERICAN-MADE
+Palavra: MOTORCYCLES.
+Palavra: AND
+Palavra: HE
+Palavra: SAID
+Palavra: ALL
+Palavra: BUY-AMERICAN
+Palavra: PROVISIONS
+Palavra: WERE
+Palavra: QUOTE
+Palavra: DISGRACEFUL.
+['1', 'McCain opposed a requirement that the government buy American-made motorcycles. And he said all buy-American provisions were quote disgraceful. ']
+1
+1.0
+Palavra: U.S.
+Palavra: REP.
+Palavra: RON
+Palavra: KIND
+Palavra: D-WIS.
+Palavra: AND
+Palavra: HIS
+Palavra: FELLOW
+Palavra: DEMOCRATS
+Palavra: WENT
+Palavra: ON
+Palavra: A
+Palavra: SPENDING
+Palavra: SPREE
+Palavra: AND
+Palavra: NOW
+Palavra: THEIR
+Palavra: CREDIT
+Palavra: CARD
+Palavra: IS
+Palavra: MAXED
+Palavra: OUT
+['0.25', 'U.S. Rep. Ron Kind D-Wis. and his fellow Democrats went on a spending spree and now their credit card is maxed out']
+0.25
+0.572193060020993
+Palavra: WATER
+Palavra: RATES
+Palavra: IN
+Palavra: MANILA
+Palavra: PHILIPPINES
+Palavra: WERE
+Palavra: RAISED
+Palavra: UP
+Palavra: TO
+Palavra: 845
+Palavra: PERCENT
+Palavra: WHEN
+Palavra: A
+Palavra: SUBSIDIARY
+Palavra: OF
+Palavra: THE
+Palavra: WORLD
+Palavra: BANK
+Palavra: BECAME
+Palavra: A
+Palavra: PARTIAL
+Palavra: OWNER.
+['0.5', 'Water rates in Manila Philippines were raised up to 845 percent when a subsidiary of the World Bank became a partial owner.']
+0.5
+0.6666667461395264
+Palavra: ALMOST
+Palavra: 100000
+Palavra: PEOPLE
+Palavra: LEFT
+Palavra: PUERTO
+Palavra: RICO
+Palavra: LAST
+Palavra: YEAR.
+['0.75', 'Almost 100000 people left Puerto Rico last year.']
+0.75
+0.8000030517578125
+Palavra: WOMEN
+Palavra: AND
+Palavra: MEN
+Palavra: BOTH
+Palavra: ARE
+Palavra: MAKING
+Palavra: LESS
+Palavra: WHEN
+Palavra: YOU
+Palavra: ADJUST
+Palavra: FOR
+Palavra: INFLATION
+Palavra: THAN
+Palavra: WHEN
+Palavra: JOHN
+Palavra: KITZHABER
+Palavra: WAS
+Palavra: FIRST
+Palavra: ELECTED
+Palavra: GOVERNOR.
+['0', 'Women and men both are making less when you adjust for inflation than when John Kitzhaber was first elected governor.']
+0
+1.0
+Palavra: THE
+Palavra: UNITED
+Palavra: STATES
+Palavra: HAS
+Palavra: THE
+Palavra: HIGHEST
+Palavra: CORPORATE
+Palavra: TAX
+Palavra: RATE
+Palavra: IN
+Palavra: THE
+Palavra: FREE
+Palavra: WORLD.
+['0.75', 'The United States has the highest corporate tax rate in the free world.']
+0.75
+0.7999999970197678
+Palavra: WE
+Palavra: JUST
+Palavra: HAD
+Palavra: THE
+Palavra: BEST
+Palavra: YEAR
+Palavra: FOR
+Palavra: THE
+Palavra: AUTO
+Palavra: INDUSTRY
+Palavra: IN
+Palavra: AMERICA
+Palavra: IN
+Palavra: HISTORY.
+['0.75', 'We just had the best year for the auto industry in America in history.']
+0.75
+0.8000000007450581
+Palavra: SAYS
+Palavra: SCOTT
+Palavra: WALKER
+Palavra: FAVORS
+Palavra: CUTTING
+Palavra: UP
+Palavra: TO
+Palavra: 350000
+Palavra: FAMILIES
+Palavra: AND
+Palavra: CHILDREN
+Palavra: OFF
+Palavra: HEALTH
+Palavra: CARE.
+['0.5', 'Says Scott Walker favors cutting up to 350000 families and children off health care.']
+0.5
+0.66668701171875
+Palavra: SAYS
+Palavra: MITT
+Palavra: ROMNEY
+Palavra: WANTS
+Palavra: TO
+Palavra: GET
+Palavra: RID
+Palavra: OF
+Palavra: PLANNED
+Palavra: PARENTHOOD.
+['0.25', 'Says Mitt Romney wants to get rid of Planned Parenthood.']
+0.25
+0.5955629348754883
+Palavra: I
+Palavra: DONT
+Palavra: KNOW
+Palavra: WHO
+Palavra: (JONATHAN
+Palavra: GRUBER)
+Palavra: IS.
+['0', 'I dont know who (Jonathan Gruber) is.']
+0
+0.0
+Palavra: HATE
+Palavra: CRIMES
+Palavra: AGAINST
+Palavra: AMERICAN
+Palavra: MUSLIMS
+Palavra: AND
+Palavra: MOSQUES
+Palavra: HAVE
+Palavra: TRIPLED
+Palavra: AFTER
+Palavra: PARIS
+Palavra: AND
+Palavra: SAN
+Palavra: BERNARDINO.
+['0.75', 'Hate crimes against American Muslims and mosques have tripled after Paris and San Bernardino.']
+0.75
+0.8000000007450581
+Palavra: RICK
+Palavra: PERRY
+Palavra: HAS
+Palavra: NEVER
+Palavra: LOST
+Palavra: AN
+Palavra: ELECTION
+Palavra: AND
+Palavra: REMAINS
+Palavra: THE
+Palavra: ONLY
+Palavra: PERSON
+Palavra: TO
+Palavra: HAVE
+Palavra: WON
+Palavra: THE
+Palavra: TEXAS
+Palavra: GOVERNORSHIP
+Palavra: THREE
+Palavra: TIMES
+Palavra: IN
+Palavra: LANDSLIDE
+Palavra: ELECTIONS.
+['0.5', 'Rick Perry has never lost an election and remains the only person to have won the Texas governorship three times in landslide elections.']
+0.5
+0.6666666269302368
+Palavra: ISIS
+Palavra: SUPPORTER
+Palavra: TWEETED
+Palavra: AT
+Palavra: 10:34
+Palavra: A.M.
+Palavra: SHOOTING
+Palavra: BEGAN
+Palavra: AT
+Palavra: 10:45
+Palavra: A.M.
+Palavra: IN
+Palavra: CHATTANOOGA
+Palavra: TENN.
+['0', 'ISIS supporter tweeted at 10:34 a.m. Shooting began at 10:45 a.m. in Chattanooga Tenn.']
+0
+1.0
+Palavra: YOUTH
+Palavra: UNEMPLOYMENT
+Palavra: IN
+Palavra: MINORITY
+Palavra: COMMUNITIES
+Palavra: IS
+Palavra: ABOUT
+Palavra: 40
+Palavra: TO
+Palavra: 45
+Palavra: PERCENT.
+['0.75', 'Youth unemployment in minority communities is about 40 to 45 percent.']
+0.75
+0.6999999284744263
+Palavra: SAYS
+Palavra: PAUL
+Palavra: RYAN
+Palavra: IS
+Palavra: STILL
+Palavra: ENDORSING
+Palavra: TRUMP.
+['1', 'Says Paul Ryan is still endorsing Trump.']
+1
+1.0
+Palavra: IF
+Palavra: YOU
+Palavra: LOOK
+Palavra: AT
+Palavra: STATES
+Palavra: THAT
+Palavra: ARE
+Palavra: RIGHT
+Palavra: TO
+Palavra: WORK
+Palavra: THEY
+Palavra: CONSTANTLY
+Palavra: DO
+Palavra: NOT
+Palavra: HAVE
+Palavra: BUDGET
+Palavra: DEFICITS
+Palavra: AND
+Palavra: THEY
+Palavra: HAVE
+Palavra: VERY
+Palavra: GOOD
+Palavra: BUSINESS
+Palavra: CLIMATES.
+['0.25', 'If you look at states that are right to work they constantly do not have budget deficits and they have very good business climates.']
+0.25
+0.5718585962618086
+Palavra: WHAT
+Palavra: (THE
+Palavra: OBAMA
+Palavra: ADMINISTRATION
+Palavra: IS)
+Palavra: GOING
+Palavra: TO
+Palavra: COME
+Palavra: OUT
+Palavra: WITH
+Palavra: IN
+Palavra: THE
+Palavra: NEXT
+Palavra: SEVERAL
+Palavra: MONTHS
+Palavra: IS
+Palavra: YOURE
+Palavra: NOT
+Palavra: EVEN
+Palavra: GOING
+Palavra: TO
+Palavra: BE
+Palavra: ABLE
+Palavra: TO
+Palavra: BURN
+Palavra: COAL
+Palavra: VERY
+Palavra: LIMITEDLY
+Palavra: IN
+Palavra: THE
+Palavra: EXISTING
+Palavra: PLANTS.
+['0', 'What (the Obama administration is) going to come out with in the next several months is youre not even going to be able to burn coal very limitedly in the existing plants.']
+0
+1.0
+Palavra: WE
+Palavra: CUT
+Palavra: BUSINESS
+Palavra: TAXES
+Palavra: SO
+Palavra: TODAY
+Palavra: 70
+Palavra: PERCENT
+Palavra: OF
+Palavra: OUR
+Palavra: BUSINESSES
+Palavra: DONT
+Palavra: PAY
+Palavra: A
+Palavra: BUSINESS
+Palavra: TAX.
+['0.75', 'We cut business taxes so today 70 percent of our businesses dont pay a business tax.']
+0.75
+0.8000000000465661
+Palavra: SAYS
+Palavra: MARK
+Palavra: PRYOR
+Palavra: VOTES
+Palavra: WITH
+Palavra: OBAMA
+Palavra: 93
+Palavra: PERCENT
+Palavra: OF
+Palavra: THE
+Palavra: TIME.
+['0.75', 'Says Mark Pryor votes with Obama 93 percent of the time.']
+0.75
+0.7999999523162842
+Palavra: WE
+Palavra: HAVE
+Palavra: A
+Palavra: FEDERAL
+Palavra: GOVERNMENT
+Palavra: THAT
+Palavra: THINKS
+Palavra: THEY
+Palavra: HAVE
+Palavra: THE
+Palavra: AUTHORITY
+Palavra: TO
+Palavra: REGULATE
+Palavra: OUR
+Palavra: TOILET
+Palavra: SEATS.
+['1', 'We have a federal government that thinks they have the authority to regulate our toilet seats.']
+1
+1.0
+Palavra: AUSTIN
+Palavra: IS
+Palavra: A
+Palavra: CITY
+Palavra: THAT
+Palavra: HAS
+Palavra: BASICALLY
+Palavra: DOUBLED
+Palavra: IN
+Palavra: SIZE
+Palavra: EVERY
+Palavra: 25
+Palavra: YEARS
+Palavra: OR
+Palavra: SO
+Palavra: SINCE
+Palavra: IT
+Palavra: WAS
+Palavra: FOUNDED.
+['1', 'Austin is a city that has basically doubled in size every 25 years or so since it was founded.']
+1
+1.0
+Palavra: THE
+Palavra: NUCLEAR
+Palavra: TEST
+Palavra: CONDUCTED
+Palavra: IN
+Palavra: OUR
+Palavra: NATION
+Palavra: THIS
+Palavra: TIME
+Palavra: IS
+Palavra: THE
+Palavra: EARTHS
+Palavra: 2054TH
+Palavra: NUCLEAR
+Palavra: TEST.
+Palavra: THE
+Palavra: FIVE
+Palavra: PERMANENT
+Palavra: MEMBERS
+Palavra: OF
+Palavra: THE
+Palavra: U.N.
+Palavra: SECURITY
+Palavra: COUNCIL
+Palavra: HAVE
+Palavra: CONDUCTED
+Palavra: 99.99
+Palavra: PERCENT
+Palavra: OF
+Palavra: THE
+Palavra: TOTAL
+Palavra: NUCLEAR
+Palavra: TESTS.
+['1', 'The nuclear test conducted in our nation this time is the Earths 2054th nuclear test. The five permanent members of the U.N. Security Council have conducted 99.99 percent of the total nuclear tests.']
+1
+1.0
+Palavra: IN
+Palavra: THE
+Palavra: CASE
+Palavra: OF
+Palavra: A
+Palavra: CATASTROPHIC
+Palavra: EVENT
+Palavra: THE
+Palavra: ATLANTA-AREA
+Palavra: OFFICES
+Palavra: OF
+Palavra: THE
+Palavra: CENTERS
+Palavra: FOR
+Palavra: DISEASE
+Palavra: CONTROL
+Palavra: AND
+Palavra: PREVENTION
+Palavra: WILL
+Palavra: SELF-DESTRUCT.
+['0', 'In the case of a catastrophic event the Atlanta-area offices of the Centers for Disease Control and Prevention will self-destruct.']
+0
+1.0
+Palavra: UNDER
+Palavra: PRESIDENT
+Palavra: GEORGE
+Palavra: W.
+Palavra: BUSH
+Palavra: WE
+Palavra: ADDED
+Palavra: $4.9
+Palavra: TRILLION
+Palavra: TO
+Palavra: THE
+Palavra: DEBT.
+Palavra: UNDER
+Palavra: PRESIDENT
+Palavra: OBAMA
+Palavra: WEVE
+Palavra: ADDED
+Palavra: $6.5
+Palavra: TRILLION
+Palavra: TO
+Palavra: THE
+Palavra: DEBT.
+['1', 'Under President George W. Bush we added $4.9 trillion to the debt. Under President Obama weve added $6.5 trillion to the debt.']
+1
+1.0
+Palavra: SAYS
+Palavra: A
+Palavra: U.S.
+Palavra: SUPREME
+Palavra: COURT
+Palavra: JUSTICE
+Palavra: SUGGESTED
+Palavra: THAT
+Palavra: SOME
+Palavra: U.S.
+Palavra: CASES
+Palavra: WILL
+Palavra: BE
+Palavra: DECIDED
+Palavra: BASED
+Palavra: ON
+Palavra: SOUTH
+Palavra: AFRICAN
+Palavra: LAW.
+['0', 'Says a U.S. Supreme Court justice suggested that some U.S. cases will be decided based on South African law.']
+0
+0.0
+Palavra: SAYS
+Palavra: MARCO
+Palavra: RUBIO
+Palavra: SKIPPED
+Palavra: 18
+Palavra: DEFENSE
+Palavra: VOTES
+Palavra: INCLUDING
+Palavra: ONE
+Palavra: TO
+Palavra: ARM
+Palavra: THE
+Palavra: KURDS
+Palavra: TO
+Palavra: FIGHT
+Palavra: ISIS.
+['0.5', 'Says Marco Rubio skipped 18 defense votes including one to arm the Kurds to fight ISIS.']
+0.5
+0.6666717529296875
+Palavra: REP.
+Palavra: DAVID
+Palavra: CICILLINE
+Palavra: IS
+Palavra: RESPONSIBLE
+Palavra: FOR
+Palavra: THE
+Palavra: FEDERAL
+Palavra: LOAN
+Palavra: GUARANTEE
+Palavra: TO
+Palavra: SOLYNDRA
+Palavra: THE
+Palavra: FAILED
+Palavra: SOLAR
+Palavra: COMPANY
+['0', 'Rep. David Cicilline is responsible for the federal loan guarantee to Solyndra the failed solar company']
+0
+1.0
+Palavra: SAYS
+Palavra: OHIO
+Palavra: BUDGET
+Palavra: ITEM
+Palavra: LATER
+Palavra: SIGNED
+Palavra: INTO
+Palavra: LAW
+Palavra: BY
+Palavra: GOV.
+Palavra: JOHN
+Palavra: KASICH
+Palavra: REQUIRES
+Palavra: WOMEN
+Palavra: SEEKING
+Palavra: AN
+Palavra: ABORTION
+Palavra: TO
+Palavra: UNDERGO
+Palavra: A
+Palavra: MANDATORY
+Palavra: VAGINAL
+Palavra: PROBE.
+['0', 'Says Ohio budget item later signed into law by Gov. John Kasich requires women seeking an abortion to undergo a mandatory vaginal probe.']
+0
+0.0
+Palavra: WE
+Palavra: HAVE
+Palavra: A
+Palavra: DIRECTOR
+Palavra: OF
+Palavra: HOMELAND
+Palavra: SECURITY
+Palavra: WHO
+Palavra: CANNOT
+Palavra: USE
+Palavra: AND
+Palavra: WILL
+Palavra: NOT
+Palavra: USE
+Palavra: THE
+Palavra: TERM
+Palavra: TERRORIST
+Palavra: ATTACK
+Palavra: BUT
+Palavra: INSTEAD
+Palavra: SUBSTITUTES
+Palavra: MAN-MADE
+Palavra: DISASTER.
+['0', 'We have a director of homeland security who cannot use and will not use the term terrorist attack but instead substitutes man-made disaster. ']
+0
+0.5
+Palavra: AFRICAN-AMERICAN
+Palavra: YOUTH
+Palavra: UNEMPLOYMENT
+Palavra: IS
+Palavra: 51
+Palavra: PERCENT.
+Palavra: HISPANIC
+Palavra: YOUTH
+Palavra: UNEMPLOYMENT
+Palavra: IS
+Palavra: 36
+Palavra: PERCENT.
+['0.5', 'African-American youth unemployment is 51 percent. Hispanic youth unemployment is 36 percent.']
+0.5
+0.75006103515625
+Palavra: OBAMACARE
+Palavra: WILL
+Palavra: PROVIDE
+Palavra: INSURANCE
+Palavra: TO
+Palavra: ALL
+Palavra: NON-U.S.
+Palavra: RESIDENTS
+Palavra: EVEN
+Palavra: IF
+Palavra: THEY
+Palavra: ARE
+Palavra: HERE
+Palavra: ILLEGALLY.
+['0', 'Obamacare will provide insurance to all non-U.S. residents even if they are here illegally.']
+0
+1.0
+Palavra: PRESIDENT
+Palavra: BARACK
+Palavra: OBAMA
+Palavra: TOOK
+Palavra: EXACTLY
+Palavra: NONE
+Palavra: OF
+Palavra: HIS
+Palavra: OWN
+Palavra: DEFICIT
+Palavra: REDUCTION
+Palavra: COMMISSIONS
+Palavra: IDEAS.
+Palavra: NOT
+Palavra: ONE.
+['0', 'President Barack Obama took exactly none of his own deficit reduction commissions ideas. Not one.']
+0
+0.0
+Palavra: IT
+Palavra: WAS
+Palavra: UNDER
+Palavra: BARACK
+Palavra: OBAMA
+Palavra: AND
+Palavra: HILLARY
+Palavra: CLINTON
+Palavra: THAT
+Palavra: CHANGED
+Palavra: THE
+Palavra: RULES
+Palavra: OF
+Palavra: ENGAGEMENT
+Palavra: THAT
+Palavra: PROBABLY
+Palavra: COST
+Palavra: (CAPT.
+Palavra: HUMAYUN
+Palavra: KHANS)
+Palavra: LIFE.
+['0', 'It was under Barack Obama and Hillary Clinton that changed the rules of engagement that probably cost (Capt. Humayun Khans) life.']
+0
+0.0
+Palavra: HILLARY
+Palavra: CLINTON
+Palavra: IN
+Palavra: 2005
+Palavra: CO-SPONSORED
+Palavra: LEGISLATION
+Palavra: THAT
+Palavra: WOULD
+Palavra: JAIL
+Palavra: FLAG
+Palavra: BURNERS.
+['1', 'Hillary Clinton in 2005 co-sponsored legislation that would jail flag burners.']
+1
+1.0
+Numero de frases:    40
+Erro positivo:   0.05000007152557373
+Erro negativo:   -10.465433356519572
+Contagem de Erros Positivos:     1
+Contagem de Erros Negativos:     24

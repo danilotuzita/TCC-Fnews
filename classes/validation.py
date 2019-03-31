@@ -57,11 +57,13 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
 
 #construir texto baseado no arquivo de validação
 
-def validation_text_comparison(data_validation_source, report_flag, training_file, report_name): #fonte de validação e flag para relatório de teste e arquivo de treinamento
+def validation_text_comparison(data_validation_source, report_flag, training_file, report_name, error_threshold): #fonte de validação e flag para relatório de teste e arquivo de treinamento
     DB_V = DB(path='../database/',debug=True)
     now = datetime.datetime.now()
     positive_error = 0 #erro positivo
     negative_error = 0 #erro negativo
+    positive_error_c = 0 #contagem de erro positivo
+    negative_error_c = 0 #contagem de erro negativo
     sentence_counter = 0
     with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
@@ -82,11 +84,15 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                         first = 0
                         prob = 0
                         for p in t.phrases:
+                            p_prob = DB_V.get_phrase_prob(p)
+                            print("Palavra: " + p.words[0].value)
+                            print("Palavra: " + p.words[1].value)
+                            print("Palavra: " + p.words[2].value)
+                            print("Probabilidade: " + str(p_prob))
                             if first != 0:
-                                prob = prob * (1- DB_V.get_phrase_prob(p)) # busca a probabilidade associada à frase e calcula probabilidade do texto
-
+                                prob = prob * (1-p_prob) # busca a probabilidade associada à frase e calcula probabilidade do texto
                             else:
-                                prob = (1- DB_V.get_phrase_prob(p)) # busca probabilidade da primeira frase
+                                prob = (1-p_prob) # busca probabilidade da primeira frase
                                 first = 1
                             prob = 1 - prob
                         print(row) #imprime texto
@@ -95,14 +101,20 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                         error = float(t.probability) - prob;
                         if error > 0:
                             positive_error += error
+                            if error > error_threshold:
+                                positive_error_c += 1
                         else:
                             negative_error += error
+                            if error < error_threshold*-1:
+                                negative_error_c += 1
                         del t
                     else:
                         return -100
                 print("Numero de frases:    " + str(sentence_counter))
                 print("Erro positivo:   " + str(positive_error))
                 print("Erro negativo:   " + str(negative_error))
+                print("Contagem de Erros Positivos:     " + str(positive_error_c))
+                print("Contagem de Erros Negativos:     " + str(negative_error_c))
             sys.stdout = orig_stdout    # reseta saída
             report.close()  #fechar arquivo de relatório
 
@@ -115,9 +127,7 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                     first = 0
                     for p in t.phrases:
                         if first != 0:
-                            prob = prob * (1 - DB_V.get_phrase_prob(
-                                p))  # busca a probabilidade associada à frase e calcula probabilidade do texto
-
+                            prob = prob * (1 - DB_V.get_phrase_prob(p))  # busca a probabilidade associada à frase e calcula probabilidade do texto
                         else:
                             prob = (1 - DB_V.get_phrase_prob(p))  # busca probabilidade da primeira frase
                             first = 1
@@ -161,11 +171,11 @@ def main_validation(source):
     report_name = validation_generate_reportname() # gera nome do relatório
     validation_report_directory("../reports/" + report_name) # cria diretório do relatório
     validation_files_creation(5, 1, '../database/' + source + '.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
-    validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento-corrigir
-    validation_text_comparison('../reports/' + report_name + '/validation_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name)
+    #validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento
+    validation_text_comparison('../reports/' + report_name + '/validation_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name, 0.05) #validação
 
 
-main_validation('LIAR_1_1000')
+main_validation('LIAR_1_50')
 
 #anotações:
 

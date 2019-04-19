@@ -16,8 +16,6 @@ class DB:
     c = None
 
     relevancy_min_count = 1
-    relevancy_roof = 0.3
-    relevancy_floor = 0.7
 
     tables = [
         "CREATE TABLE IF NOT EXISTS WORDS ("
@@ -214,45 +212,34 @@ class DB:
         for i, alpha in enumerate(firefly):
             self.update_alpha(i, alpha)
 
-    def set_relevancy_params(self, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
-        """"
-        :param count: numero minimo de vezes que a frase foi citada
-        :param roof: topo do minimo
-        :param floor: chão do maximo
-        """
-        self.relevancy_min_count = count
-        self.relevancy_roof = roof
-        self.relevancy_floor = floor
-
-    def get_relevant_phrases(self, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
+    def get_relevant_phrases(self, floor, roof, count=relevancy_min_count):
         """"
         retorna ids das frases relevantes
+        :param floor: probabilidade minima
+        :param roof: probablidade maxima
         :param count: numero minimo de vezes que a frase foi citada
-        :param roof: topo do minimo
-        :param floor: chão do maximo
         """
         return self.query(
             'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID '
             'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
-            ' AND AVG(PROBABILITY) NOT BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
+            ' AND AVG(PROBABILITY) BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
         )
 
-    def is_relevant_phrase(self, phrase, count=relevancy_min_count, roof=relevancy_roof, floor=relevancy_floor):
+    def is_relevant_phrase(self, phrase, floor, roof, count=relevancy_min_count):
         """"
         :param phrase: id da frase<int> ou Phrase
+        :param floor: probabilidade minima
+        :param roof: probablidade maxima
         :param count: numero minimo de vezes que a frase foi citada
-        :param roof: topo do minimo
-        :param floor: chão do maximo
         """
         if type(phrase) is Phrase:
             phrase = self.get_phrase_id(phrase)
 
         if type(phrase) is int:
-                return self.query(
-                    'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID'
-                    'WHERE PHRASE_ID = ' + str(phrase) +
-                    'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
-                    ' AND AVG(PROBABILITY) NOT BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
-                )
+            return self.query(
+                'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID'
+                'WHERE PHRASE_ID = ' + str(phrase) +
+                'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
+                ' AND AVG(PROBABILITY) BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
+            )
         return -1
-    

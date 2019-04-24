@@ -64,7 +64,7 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
     negative_error = 0 #erro negativo
     positive_error_c = 0 #contagem de erro positivo
     negative_error_c = 0 #contagem de erro negativo
-    sentence_counter = 0
+    sentence_counter = 0 #contagem de frases
     with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
 
@@ -113,6 +113,7 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                 print("Numero de frases:    " + str(sentence_counter))
                 print("Erro positivo:   " + str(positive_error))
                 print("Erro negativo:   " + str(negative_error))
+                print("Erro total:      " + str(positive_error + abs(negative_error)))
                 print("Contagem de Erros Positivos:     " + str(positive_error_c))
                 print("Contagem de Erros Negativos:     " + str(negative_error_c))
             sys.stdout = orig_stdout    # reseta saída
@@ -136,19 +137,19 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                     else:
                         return -100
 
-def validation_generate_reportname():
+def validation_generate_reportname(appendix = ""):
     now = datetime.datetime.now()
-    return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second)
+    return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second) + appendix
 
 
 def validation_report_directory(directory_name):
     os.mkdir(directory_name)
 
-def validation_train(source_name):
+def validation_train(report_dir, source_name):
 
     # inicio do treino ===============================
     start = datetime.datetime.now()
-    db = DB("../database/", "database", False)
+    db = DB(report_dir, "/database", False)
     with open(source_name, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)  # leitura do arquivo
         for row in reader:  # para cada linha
@@ -167,17 +168,20 @@ def validation_train(source_name):
     # fim do treino
 
 
-def main_validation(source):
-    report_name = validation_generate_reportname() # gera nome do relatório
-    validation_report_directory("../reports/" + report_name) # cria diretório do relatório
-    validation_files_creation(5, 1, '../database/' + source + '.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
-    #validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento
-    validation_text_comparison('../reports/' + report_name + '/validation_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name, 0.05) #validação
+def main_validation(source, report_dir, slice_number):
+    # gera nome do relatório original
+    report_name_o = validation_generate_reportname()
+    for slice in range(1,slice_number+1):
+        report_name = report_name_o + "_" + str(slice)  # gera nome do relatório para a fatia
+        validation_report_directory(report_dir + report_name) # cria diretório do relatório
+        validation_files_creation(slice_number, slice, source, report_dir + report_name) # cria arquivos divididos de validação / treinamento
+        validation_train(report_dir + report_name,report_dir + report_name + '/training_tab.csv') #treinamento
+        validation_text_comparison(report_dir + report_name + '/validation_tab.csv', True, report_dir + report_name + '/validation_tab.csv', report_name, 0.05) #validação
 
 
-main_validation('LIAR_1_50')
+main_validation('../database/LIAR_1_50.csv', "../reports/", 5)
 
-#anotações:
+# ================= anotações ===========================
 
 #calcular veracidade do texto
 

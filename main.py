@@ -2,7 +2,7 @@
 from classes.text import Text
 from classes.db import DB
 from pathlib import Path
-from classes.Firefly import lplFirefly as Firefly
+# from classes.Firefly import lplFirefly as Firefly
 import datetime
 import csv
 import os
@@ -11,7 +11,8 @@ import os
 def call_firefly():
     db = DB()
     # fireflies = Firefly(db.get_phrase_count())
-    fireflies = Firefly(10)
+    # fireflies = Firefly(10)
+
 
 def finaliza():
     a = input('Deseja fechar o programa? S/N')
@@ -113,5 +114,10 @@ def train():
     print('Delta: ' + str(end - start))
 
 
-# main()
-call_firefly()
+# texto = 'nós temos que testar o modelo q nós temos (mesmo que esteja quebrado) com o firefly'
+# t = Text(str.split(str.upper(texto), ' '))  # cria um Text
+# t.build_phrases(3)
+# t.print_phrases()
+
+main()
+# call_firefly()

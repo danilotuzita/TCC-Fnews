@@ -1,11 +1,11 @@
 # encoding: utf-8
-from classes.validation import brilho
 import random
 import math
 import numpy as np
 
 
-def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100):
+def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source="", database=""):
+    from classes.validation import Brilho
     """"
     :param n: number of agents
     :param d: dimension
@@ -42,7 +42,7 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100):
 
     while t < maxGenerarion:  # Start iterations
         for i in range(n):
-            Z[i] = brilho(fireflies[i])
+            Z[i] = Brilho(data_source,fireflies[i], database)
         print("brilho", Z)
 
         indice = np.argsort(Z)

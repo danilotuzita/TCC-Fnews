@@ -9,11 +9,52 @@ import datetime
 import sys
 import os
 
-def brilho(firefly):
-    b = 0
-    for i in range(len(firefly)):
-        b += firefly[i]
-    return b
+
+class AlfaCluster:
+    # inicializa array de alfas por cluster com o numero de alfas e o array
+    def __init__(self, number_of_alfas, alfa_array):
+        self.n = number_of_alfas
+        self.arr = alfa_array
+
+    # retorna o valor alfa para uma dada probabilidade
+    def getalfa(self, prob):
+        for i in range(0, self.n):
+            if prob <= (i+1)/self.n:
+                return self.arr[i]
+
+
+
+    # retorna o valor do brilho
+def Brilho(data_validation_source, firefly, database):
+    alfas = AlfaCluster(len(firefly), firefly)
+    DB_V = DB(database, debug=True)
+    positive_error = 0  # erro positivo
+    negative_error = 0  # erro negativo
+    with open(data_validation_source,encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            t = Text(str.split(str.upper(row[1])), row[0])
+            if t:
+                t.build_phrases(3)  # construir frases
+                first = 0
+                prob = 0
+                for p in t.phrases:
+                    p_prob = DB_V.get_phrase_prob(p)
+                    temp_alfa = alfas.getalfa(p_prob)
+                    if first != 0:
+                        prob = prob * (1 - p_prob) ** temp_alfa  # busca a probabilidade associada à frase e calcula probabilidade do texto
+                    else:
+                        prob = (1 - p_prob) ** temp_alfa  # busca probabilidade da primeira frase
+                        first = 1
+                    prob = 1 - prob
+                error = float(t.probability) - prob;
+                if error > 0:
+                    positive_error += error
+                else:
+                    negative_error += error
+                del t
+    return 1/(positive_error+abs(negative_error)+0.000001) #retorna o erro mais 0.000001 para evitar divisão por 0
+
 
 def validation_files_creation(number_of_slices, validation_slice, source_file, output_directory): #numero de divisões do arquivo de entrada e divisão selecionada para validação
 
@@ -49,22 +90,21 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
                 if writer_line_count > (reader_line_count / number_of_slices)*validation_slice or writer_line_count <= (reader_line_count / number_of_slices)*(validation_slice-1):
                     training_tab.writerow([row2[0], row2[1]])
 
-
-
-
 # definir dados lidos pelo main.py (enviando caminho do .csv de treinamento)
-# leer dados da base alimentada pelo sistema principal
+# ler dados da base alimentada pelo sistema principal
 
-#construir texto baseado no arquivo de validação
+#  construir texto baseado no arquivo de validação
 
-def validation_text_comparison(data_validation_source, report_flag, training_file, report_name, error_threshold): #fonte de validação e flag para relatório de teste e arquivo de treinamento
-    DB_V = DB(path='../database/',debug=True)
+#  fonte de validação e flag para relatório de teste e arquivo de treinamento
+
+def validation_text_comparison(data_validation_source, report_flag, training_file, report_name, error_threshold, alfas, database):
+    DB_V = DB(database,debug=True)
     now = datetime.datetime.now()
     positive_error = 0 #erro positivo
     negative_error = 0 #erro negativo
     positive_error_c = 0 #contagem de erro positivo
     negative_error_c = 0 #contagem de erro negativo
-    sentence_counter = 0
+    sentence_counter = 0 #contagem de frases
     with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
 
@@ -89,10 +129,12 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                             print("Palavra: " + p.words[1].value)
                             print("Palavra: " + p.words[2].value)
                             print("Probabilidade: " + str(p_prob))
+                            temp_alfa = alfas.getalfa(p_prob)
+                            print("Alfa: " + str(temp_alfa))
                             if first != 0:
-                                prob = prob * (1-p_prob) # busca a probabilidade associada à frase e calcula probabilidade do texto
+                                prob = prob * (1-p_prob)**temp_alfa # busca a probabilidade associada à frase e calcula probabilidade do texto
                             else:
-                                prob = (1-p_prob) # busca probabilidade da primeira frase
+                                prob = (1-p_prob)**temp_alfa # busca probabilidade da primeira frase
                                 first = 1
                             prob = 1 - prob
                         print(row) #imprime texto
@@ -108,55 +150,68 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                             if error < error_threshold*-1:
                                 negative_error_c += 1
                         del t
-                    else:
-                        return -100
                 print("Numero de frases:    " + str(sentence_counter))
                 print("Erro positivo:   " + str(positive_error))
                 print("Erro negativo:   " + str(negative_error))
+                print("Erro total:      " + str(positive_error + abs(negative_error)))
                 print("Contagem de Erros Positivos:     " + str(positive_error_c))
                 print("Contagem de Erros Negativos:     " + str(negative_error_c))
             sys.stdout = orig_stdout    # reseta saída
             report.close()  #fechar arquivo de relatório
 
-        else: #caso a flag de relatório esteja desativada
+        # caso a flag de relatório esteja desativada
+        else:
             for row in csv_reader:
                 sentence_counter += 1
                 t = Text(str.split(str.upper(row[1])), row[0])
                 if t:
-                    t.build_phrases(3)  # construir frases
+                    t.build_phrases(3) #construir frases
                     first = 0
+                    prob = 0
                     for p in t.phrases:
+                        p_prob = DB_V.get_phrase_prob(p)
+                        temp_alfa = alfas.getalfa(p_prob)
                         if first != 0:
-                            prob = prob * (1 - DB_V.get_phrase_prob(p))  # busca a probabilidade associada à frase e calcula probabilidade do texto
+                            prob = prob * (1-p_prob)**temp_alfa # busca a probabilidade associada à frase e calcula probabilidade do texto
                         else:
-                            prob = (1 - DB_V.get_phrase_prob(p))  # busca probabilidade da primeira frase
+                            prob = (1-p_prob)**temp_alfa # busca probabilidade da primeira frase
                             first = 1
                         prob = 1 - prob
-                        del t
+                    error = float(t.probability) - prob;
+                    if error > 0:
+                        positive_error += error
+                        if error > error_threshold:
+                            positive_error_c += 1
                     else:
-                        return -100
+                        negative_error += error
+                        if error < error_threshold*-1:
+                            negative_error_c += 1
+                    del t
+    return positive_error+abs(negative_error)+0.000001 #retorna o erro mais 0.000001 para evitar divisão por 0
 
-def validation_generate_reportname():
+def validation_generate_reportname(appendix = ""):
     now = datetime.datetime.now()
-    return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second)
+    return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second) + appendix
 
 
 def validation_report_directory(directory_name):
     os.mkdir(directory_name)
 
-def validation_train(source_name):
-
+def validation_train(report_dir, source_name):
+    line_count = 0;
     # inicio do treino ===============================
     start = datetime.datetime.now()
-    db = DB("../database/", "database", False)
+    db = DB(report_dir, "/database", False)
     with open(source_name, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)  # leitura do arquivo
         for row in reader:  # para cada linha
+            line_count = line_count+1
+            print(str(line_count))
             t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
             if t:
                 t.build_phrases(3)
-                t.print_phrases()
-                db.insert_text(t, True)
+                #  t.print_phrases()
+                db.insert_text(t, False)
                 del t
             else:
                 return -100
@@ -167,17 +222,72 @@ def validation_train(source_name):
     # fim do treino
 
 
-def main_validation(source):
-    report_name = validation_generate_reportname() # gera nome do relatório
-    validation_report_directory("../reports/" + report_name) # cria diretório do relatório
-    validation_files_creation(5, 1, '../database/' + source + '.csv', '../reports/' + report_name) # cria arquivos divididos de validação / treinamento
-    #validation_train('../reports/' + report_name + '/training_tab.csv') #treinamento
-    validation_text_comparison('../reports/' + report_name + '/validation_tab.csv', True, '../reports/' + report_name + '/training_tab.csv', report_name, 0.05) #validação
+def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
+    from classes.Firefly import lplFirefly
+    # etapa de treinamento inicial, naive bayes
+
+    # gera nome do relatório original
+    report_name_o = validation_generate_reportname()
+    # gera nome do relatorio fonte
+    validation_report_directory(report_dir + report_name_o)
+    best = 3.14  # declara melhor resultado de brilho
+    best_slice = 0
+    ALFAS = AlfaCluster(n_alfas, alfa_arr)
+    for slice in range(1,slice_number+1):
+        print("Slice " + str(slice) + " de " + str(slice_number))
+        print("gera nome do relatório")
+
+        # gera nome do relatório para a parte do conjunto cross validation
+        report_name = report_name_o + "_" + str(slice)
+        print(report_name)
+
+        # cria diretório do relatório
+        validation_report_directory(report_dir + report_name)
+
+        # cria arquivos divididos de validação / treinamento
+        print("Cria arquivos de validação")
+        validation_files_creation(slice_number, slice, source, report_dir + report_name)
+
+        # treinamento
+        print("Treino")
+        validation_train(report_dir + report_name,report_dir + report_name + '/training_tab.csv')
+        temp = 1/(validation_text_comparison(report_dir + report_name + '/validation_tab.csv', True, report_dir + report_name + '/training_tab.csv', report_name, 0.05, ALFAS, report_dir + report_name+"/database")) #validação
+        print("Fim treino")
+
+        # caso seja primeira fatia
+        if slice == 1:
+            best = temp
+            best_slice = slice
+        else:
+            if temp > best:
+                best = temp
+                best_slice = slice
+    print("O melhor slice:")
+    print(best_slice)
+
+    # etapa secundaria, utilizando otimização firefly
+    print("Executa firefly")
+    with open(report_dir + report_name_o + "/report.out", "w") as report:  # abre arquivo de relatório
+        orig_stdout = sys.stdout  # guarda saida padrão
+        sys.stdout = report  # troca saida padrão por relatório
+        bests = lplFirefly(n_alfas, 3, 1, 1, 1, 100, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice) +'/database')
+        print("Melhores fireflies:")
+        print(bests)
+        sys.stdout = orig_stdout  # reseta saída
+        report.close()  # fechar arquivo de relatório
+
+    print("Melhores fireflies")
+    print(bests)
+    x = input()
+
+if __name__ == "__main__":
+    # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
+    print("Incio")
+    x = input()
+    main_validation('../database/LIAR_1_8.csv', "../reports/", 2, 5, [1, 1, 1, 1, 1])
 
 
-main_validation('LIAR_1_50')
-
-#anotações:
+# ================= anotações ===========================
 
 #calcular veracidade do texto
 
@@ -194,3 +304,9 @@ main_validation('LIAR_1_50')
 # aaaaa
 
 #funcao principal de validacao
+
+# def brilho(firefly):
+#     b = 0
+#     for i in range(len(firefly)):
+#         b += firefly[i]
+#     return b

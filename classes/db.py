@@ -11,6 +11,7 @@ class DB:
     debug = False
     debug_filename = None
     terminal = None
+    ram = False
 
     conn = None
     c = None
@@ -48,13 +49,18 @@ class DB:
     ]
 
     # connection = sqlite3.connect("file::memory:?cache=shared")
-    def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug', connection=None):
+    def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug',
+                 connection=None, run_on_ram=False):
         self.path = path
         self.filename = filename
         if connection:
             self.conn = connection
         else:
-            self.conn = sqlite3.connect(path + filename + '.db')
+            if run_on_ram:
+                self.conn = sqlite3.connect(":memory:")
+                self.ram = True
+            else:
+                self.conn = sqlite3.connect(path + filename + '.db')
         self.c = self.conn.cursor()
         self.check_tables()
 
@@ -63,6 +69,11 @@ class DB:
             self.open_debug(debug_filename)
 
     def __del__(self):
+        if self.ram:
+            with open('dump.sql', 'w') as f:
+                for line in self.conn.iterdump():
+                    f.write('%s\n' % line)
+
         self.conn.close()
         if self.debug:
             self.debug.close()

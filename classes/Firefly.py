@@ -4,7 +4,7 @@ import math
 import numpy as np
 
 
-def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source="", database=""):
+def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_source="", database=""):
     from classes.validation import Brilho
     """"
     :param n: number of agents
@@ -30,7 +30,7 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source=
         threshold.sort()
         fireflies.append(threshold)
 
-    print(fireflies)
+    # print(fireflies)
 
     # Iterations or pseudo time marching
     r = []
@@ -43,7 +43,7 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source=
     while t < maxGenerarion:  # Start iterations
         for i in range(n):
             Z[i] = Brilho(data_source,fireflies[i], database)
-        print("brilho", Z)
+            print("brilho:  " + str(i) + "  :   ", Z[i])
 
         indice = np.argsort(Z)
         Z.sort()
@@ -79,8 +79,11 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source=
                         for k in range(d):
                             fireflies[i][k] = ((1 - betat)*fireflies[i][k] + betat*fireflies[j][k] +
                                                      alphat*threshold[k]/(1+alphat))
-
-        print(fireflies)
+        print("Iteration:  " + str(t))
+        for i in range(n):
+            print("Firefly: ", i)
+            for j in range(d):
+                print("Alfa : " + str(j) + "    :   " + str(fireflies[i][j]))
 
         bests = fireflies[0]
 
@@ -88,7 +91,7 @@ def lplFirefly(d, n=3, gamma=1, alpha=1, beta=1, maxGenerarion=100, data_source=
 
     bests.sort()
 
-    print("bests", bests)
+    print("bests:   ", bests)
 
     return bests
 

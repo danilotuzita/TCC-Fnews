@@ -222,7 +222,7 @@ class DB:
         return self.query(
             'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID '
             'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
-            ' AND AVG(PROBABILITY) BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
+            ' AND AVG(PROBABILITY) BETWEEN ' + str(floor) + ' AND ' + str(roof) + ';'
         )
 
     def is_relevant_phrase(self, phrase, floor, roof, count=relevancy_min_count):
@@ -237,9 +237,60 @@ class DB:
 
         if type(phrase) is int:
             return self.query(
-                'SELECT PHRASE_ID FROM PHRASES_PROB GROUP BY PHRASE_ID'
+                'SELECT PHRASE_ID FROM PHRASES_PROB '
                 'WHERE PHRASE_ID = ' + str(phrase) +
-                'HAVING COUNT(PHRASE_ID) >= ' + str(count) +
+                ' GROUP BY PHRASE_ID HAVING COUNT(PHRASE_ID) >= ' + str(count) +
                 ' AND AVG(PROBABILITY) BETWEEN ' + str(roof) + ' AND ' + str(floor) + ';'
             )
+        return -1
+
+    def get_all_phrase_prob(self, phrase):
+        """"
+        retorna a quantidade de vezes que a frase phrase teve certa probabilidade
+        SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB WHERE PHRASE_ID = phrase
+        GROUP BY PHRASE_ID, PROBABILITY;
+        :param phrase: id da frase<int> ou Phrase
+        """
+        if type(phrase) is Phrase:
+            phrase = self.get_phrase_id(phrase)
+
+        return self.query(
+            'SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB '
+            'WHERE PHRASE_ID = ' + str(phrase) + ' '
+            'GROUP BY PHRASE_ID, PROBABILITY;'
+        )
+        return -1
+
+    def get_phrase_prob_count(self, phrase, prob):
+        """"
+        retorna a quantidade de vezes que a frase phrase teve probabilidade prob
+        SELECT COUNT(*) FROM PHRASES_PROB WHERE PHRASE_ID = phrase AND PROBABILITY = prob;
+        :param phrase: id da frase<int> ou Phrase
+        :param prob: probabilidade
+        """
+        if type(phrase) is Phrase:
+            phrase = self.get_phrase_id(phrase)
+
+        return self.query(
+            'SELECT COUNT(*) FROM PHRASES_PROB '
+            'WHERE PHRASE_ID = ' + str(phrase) + ' '
+            'AND PROBABILITY = ' + str(prob) + ';'
+        )
+
+        return -1
+
+    def get_phrases_with_prob(self, prob):
+        """"
+        retorna as frases e sua quantidade de vezes que teve probabilidade prob
+        SELECT PHRASE_ID, COUNT(*) FROM PHRASES_PROB WHERE PROBABILITY = prob
+        GROUP BY PHRASE_ID;
+        :param phrase: id da frase<int> ou Phrase
+        :param prob: probabilidade
+        """
+        return self.query(
+            'SELECT PHRASE_ID, COUNT(*) FROM PHRASES_PROB '
+            'WHERE PROBABILITY = ' + str(prob) + ' '
+            'GROUP BY PHRASE_ID;'
+        )
+
         return -1

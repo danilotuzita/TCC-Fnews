@@ -73,10 +73,24 @@ class DB:
             with open('dump.sql', 'w') as f:
                 for line in self.conn.iterdump():
                     f.write('%s\n' % line)
+            self.conn.close()
+            conn = sqlite3.connect(self.path + self.filename + '.db')
+            self.run_sql_file('dump.sql', conn)
 
         self.conn.close()
         if self.debug:
             self.debug.close()
+
+    def run_sql_file(self, filename, conn):
+        file = open(filename, 'r')
+        # print("Start executing: " + filename + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")) + "\n" + sql)
+        sql = file.read()  # watch out for built-in `str`
+        cur = conn.cursor()
+        cur.executescript(sql)
+        conn.commit()
+        # end = time.time()
+        # print("Time elapsed to run the query:")
+        # print(str((end - start) * 1000) + ' ms')
 
     def open_debug(self, debug_filename):
         self.debug = open(self.path + debug_filename+'.log', 'w+')

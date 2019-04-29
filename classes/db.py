@@ -47,10 +47,14 @@ class DB:
         ");"
     ]
 
-    def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug'):
+    # connection = sqlite3.connect("file::memory:?cache=shared")
+    def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug', connection=None):
         self.path = path
         self.filename = filename
-        self.conn = sqlite3.connect(path + filename + '.db')
+        if connection:
+            self.conn = connection
+        else:
+            self.conn = sqlite3.connect(path + filename + '.db')
         self.c = self.conn.cursor()
         self.check_tables()
 

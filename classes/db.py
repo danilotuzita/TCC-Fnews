@@ -72,7 +72,7 @@ class DB:
         if self.ram:
             with open('dump.sql', 'w') as f:
                 for line in self.conn.iterdump():
-                    f.write('%s\n' % line)
+                    f.write('%s\n' % (line.encode('ascii', 'ignore')).decode('utf-8'))
             self.conn.close()
             conn = sqlite3.connect(self.path + self.filename + '.db')
             self.run_sql_file('dump.sql', conn)

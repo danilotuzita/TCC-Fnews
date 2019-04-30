@@ -128,9 +128,9 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                         prob = 0
                         for p in t.phrases:
                             p_prob = DB_V.get_phrase_prob(p)
-                            print("Palavra: " + p.words[0].value)
-                            print("Palavra: " + p.words[1].value)
-                            print("Palavra: " + p.words[2].value)
+                            print("Palavra: " + (p.words[0].value.encode('ascii', 'ignore')).decode('utf-8'))
+                            print("Palavra: " + (p.words[1].value.encode('ascii', 'ignore')).decode('utf-8'))
+                            print("Palavra: " + (p.words[2].value.encode('ascii', 'ignore')).decode('utf-8'))
                             print("Probabilidade: " + str(p_prob))
                             temp_alfa = alfas.getalfa(p_prob)
                             print("Alfa: " + str(temp_alfa))
@@ -204,7 +204,7 @@ def validation_train(report_dir, source_name):
     line_count = 0;
     # inicio do treino ===============================
     start = datetime.datetime.now()
-    db = DB(report_dir + "/", "database", True)
+    db = DB(report_dir + "/", "database", debug=False, run_on_ram=True)
     print(report_dir)
     with open(source_name, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)  # leitura do arquivo
@@ -292,7 +292,7 @@ if __name__ == "__main__":
     # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
     print("Inicio")
     x = input()
-    main_validation('../database/LIAR_1_100.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
+    main_validation('../database/LIAR_1_500.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
 
 
 # ================= anotações ===========================

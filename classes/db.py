@@ -4,6 +4,7 @@ import os
 import datetime
 from classes.phrase import Phrase
 
+
 class DB:
     path = None
     filename = None
@@ -56,11 +57,14 @@ class DB:
         if connection:
             self.conn = connection
         else:
-            if run_on_ram:
-                self.conn = sqlite3.connect(":memory:")
-                self.ram = True
-            else:
+            if not run_on_ram:
                 self.conn = sqlite3.connect(path + filename + '.db')
+            else:
+                self.conn = sqlite3.connect(":memory:")  # cria banco na memoria
+                self.ram = True
+                if os.path.isfile(run_on_ram):
+                    self.run_sql_file(run_on_ram, self.conn)
+
         self.c = self.conn.cursor()
         self.check_tables()
 
@@ -70,30 +74,27 @@ class DB:
 
     def __del__(self):
         if self.ram:
-            with open('dump.sql', 'w') as f:
+            with open(self.path + self.filename + '.sql', 'w') as f:
                 for line in self.conn.iterdump():
                     f.write('%s\n' % (line.encode('ascii', 'ignore')).decode('utf-8'))
             self.conn.close()
-            conn = sqlite3.connect(self.path + self.filename + '.db')
-            self.run_sql_file('dump.sql', conn)
+            # conn = sqlite3.connect(self.path + self.filename + '.db')
+            # self.run_sql_file('dump.sql', conn)
 
         self.conn.close()
         if self.debug:
             self.debug.close()
 
-    def run_sql_file(self, filename, conn):
+    @staticmethod
+    def run_sql_file(filename, conn):
         file = open(filename, 'r')
-        # print("Start executing: " + filename + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")) + "\n" + sql)
         sql = file.read()  # watch out for built-in `str`
         cur = conn.cursor()
         cur.executescript(sql)
         conn.commit()
-        # end = time.time()
-        # print("Time elapsed to run the query:")
-        # print(str((end - start) * 1000) + ' ms')
 
     def open_debug(self, debug_filename):
-        self.debug = open(self.path + debug_filename+'.log', 'w+')
+        self.debug = open(self.path + debug_filename + '.log', 'w+')
 
     def save_backup(self, directory=None, rel_directory='bkp/'):
         self.conn.close()
@@ -186,7 +187,7 @@ class DB:
         query += 'GROUP BY ID HAVING COUNT(*) = ' + str(phrase.k) + ';'
         pid = self.query(query, print_values)
 
-        if not pid and force_create:   # checa se a frase existe e se deve ser criada
+        if not pid and force_create:  # checa se a frase existe e se deve ser criada
             pid = self.insert_new_phrase(phrase)
         return pid
 
@@ -286,9 +287,8 @@ class DB:
         return self.query(
             'SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB '
             'WHERE PHRASE_ID = ' + str(phrase) + ' '
-            'GROUP BY PHRASE_ID, PROBABILITY;'
+                                                 'GROUP BY PHRASE_ID, PROBABILITY;'
         )
-        return -1
 
     def get_phrase_prob_count(self, phrase, prob):
         """"
@@ -303,10 +303,8 @@ class DB:
         return self.query(
             'SELECT COUNT(*) FROM PHRASES_PROB '
             'WHERE PHRASE_ID = ' + str(phrase) + ' '
-            'AND PROBABILITY = ' + str(prob) + ';'
+                                                 'AND PROBABILITY = ' + str(prob) + ';'
         )
-
-        return -1
 
     def get_phrases_with_prob(self, prob):
         """"
@@ -319,7 +317,5 @@ class DB:
         return self.query(
             'SELECT PHRASE_ID, COUNT(*) FROM PHRASES_PROB '
             'WHERE PROBABILITY = ' + str(prob) + ' '
-            'GROUP BY PHRASE_ID;'
+                                                 'GROUP BY PHRASE_ID;'
         )
-
-        return -1

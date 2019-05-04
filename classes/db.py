@@ -46,9 +46,10 @@ class DB:
         "    ALPHA NUMBER DEFAULT 1,"
         "        FOREIGN KEY (PHRASE_ID) REFERENCES FHRASES(ID),"
         "        CHECK (PROBABILITY BETWEEN 0 AND 1)"
-        ");"
+        ");",
 
-        "CREATE UNIQUE INDEX IF NOT EXISTS index_words ON words(word);"
+        "CREATE UNIQUE INDEX IF NOT EXISTS index_words ON words(word);",
+
         "CREATE INDEX IF NOT EXISTS index_phrases ON phrases(word_id, word_order);"
     ]
 

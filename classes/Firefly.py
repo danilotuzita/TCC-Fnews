@@ -2,10 +2,11 @@
 import random
 import math
 import numpy as np
-
+from classes.db import DB
 
 def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_source="", database=""):
     from classes.validation import Brilho
+    DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
     """"
     :param n: number of agents
     :param d: dimension
@@ -42,7 +43,7 @@ def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_s
 
     while t < maxGenerarion:  # Start iterations
         for i in range(n):
-            Z[i] = Brilho(data_source,fireflies[i], database)
+            Z[i] = Brilho(data_source,fireflies[i], DB_V)
             print("brilho:  " + str(i) + "  :   ", Z[i])
 
         indice = np.argsort(Z)

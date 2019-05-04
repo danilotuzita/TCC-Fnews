@@ -9,7 +9,6 @@ import datetime
 import sys
 import os
 
-
 class AlfaCluster:
     # inicializa array de alfas por cluster com o numero de alfas e o array
     def __init__(self, number_of_alfas, alfa_array):
@@ -22,12 +21,9 @@ class AlfaCluster:
             if prob <= (i+1)/self.n:
                 return self.arr[i]
 
-
-
     # retorna o valor do brilho
-def Brilho(data_validation_source, firefly, database):
+def Brilho(data_validation_source, firefly, DB_V):
     alfas = AlfaCluster(len(firefly), firefly)
-    DB_V = DB(database + "/", "database", debug=True)
     positive_error = 0  # erro positivo
     negative_error = 0  # erro negativo
     sentence_counter = 0
@@ -100,7 +96,7 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
 #  fonte de validação e flag para relatório de teste e arquivo de treinamento
 
 def validation_text_comparison(data_validation_source, report_flag, training_file, report_name, error_threshold, alfas, database):
-    DB_V = DB(database + "/", "database", debug=False)
+    DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
     print(database)
     now = datetime.datetime.now()
     positive_error = 0 #erro positivo
@@ -227,6 +223,7 @@ def validation_train(report_dir, source_name):
 
 
 def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
+    temp  = 1
     from classes.Firefly import lplFirefly
     # etapa de treinamento inicial, naive bayes
 
@@ -259,7 +256,7 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
 
         # validacao
         print("Validacao")
-        temp = validation_text_comparison(report_dir + report_name + '/validation_tab.csv', True, report_dir + report_name + '/training_tab.csv', report_name, 0.05, ALFAS, report_dir + report_name) #validação
+        temp = validation_text_comparison(report_dir + report_name + '/training_tab.csv', True, report_dir + report_name + '/training_tab.csv', report_name, 0.05, ALFAS, report_dir + report_name) #validação
         print("Fim validacao")
 
         # caso seja primeira fatia
@@ -278,7 +275,7 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     with open(report_dir + report_name_o + "/report.out", "w") as report:  # abre arquivo de relatório
         orig_stdout = sys.stdout  # guarda saida padrão
         sys.stdout = report  # troca saida padrão por relatório
-        bests = lplFirefly(n_alfas, 50, 1, 1, 1, 100, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
+        bests = lplFirefly(n_alfas, 50, 1, 1, 1, 100, report_dir+report_name_o + '_' + str(best_slice) + '/training_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
         print("Melhores fireflies:")
         print(bests)
         sys.stdout = orig_stdout  # reseta saída
@@ -292,7 +289,7 @@ if __name__ == "__main__":
     # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
     print("Inicio")
     x = input()
-    main_validation('../database/LIAR_1_500.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
+    main_validation('../database/LIAR_1_200.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
 
 
 # ================= anotações ===========================

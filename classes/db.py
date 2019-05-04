@@ -52,6 +52,7 @@ class DB:
     # connection = sqlite3.connect("file::memory:?cache=shared")
     def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug',
                  connection=None, run_on_ram=False):
+        print("build db")
         self.path = path
         self.filename = filename
         if connection:

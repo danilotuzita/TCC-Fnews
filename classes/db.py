@@ -47,6 +47,9 @@ class DB:
         "        FOREIGN KEY (PHRASE_ID) REFERENCES FHRASES(ID),"
         "        CHECK (PROBABILITY BETWEEN 0 AND 1)"
         ");"
+
+        "CREATE UNIQUE INDEX IF NOT EXISTS index_words ON words(word);",
+        "CREATE INDEX IF NOT EXISTS index_phrases ON phrases(word_id, word_order);"
     ]
 
     # connection = sqlite3.connect("file::memory:?cache=shared")

@@ -4,7 +4,7 @@ import math
 import numpy as np
 from classes.db import DB
 
-def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_source="", database=""):
+def lplFirefly(d, n=5, gamma=0.8, alpha=0.2, beta=0.9, maxGenerarion=100, data_source="", database=""):
     from classes.validation import Brilho
     DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
     """"
@@ -44,10 +44,13 @@ def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_s
     while t < maxGenerarion:  # Start iterations
         for i in range(n):
             Z[i] = Brilho(data_source,fireflies[i], DB_V)
-            print("brilho:  " + str(i) + "  :   ", Z[i])
+
 
         indice = np.argsort(Z)
         Z.sort()
+        for i in range(n):
+            print("brilho:  " + str(i) + "  :   ", Z[i])
+
 
         Z = [-x for x in Z]
 
@@ -68,7 +71,7 @@ def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_s
         for i in range(n):
             threshold = []
             for j in range(n):
-                if Z[i] < Z[j]:
+                if Z[i] > Z[j]:
                     for k in range(d):
                         threshold.append(random.uniform(0, 1))
                     threshold.sort()
@@ -76,7 +79,6 @@ def lplFirefly(d, n=5, gamma=0.8, alpha=0.9, beta=0.9, maxGenerarion=100, data_s
                     betat = beta*math.exp(-gamma*((r[i][j])**2))
 
                     if i != n-1:
-
                         for k in range(d):
                             fireflies[i][k] = ((1 - betat)*fireflies[i][k] + betat*fireflies[j][k] +
                                                      alphat*threshold[k]/(1+alphat))

@@ -21,6 +21,10 @@ class AlfaCluster:
             if prob <= (i+1)/self.n:
                 return self.arr[i]
 
+    def getalfaS(self, index):
+        if index < self.n and index >= 0:
+            return self.arr[index]
+
     # retorna o valor do brilho
 def Brilho(data_validation_source, firefly, DB_V):
     alfas = AlfaCluster(len(firefly), firefly)
@@ -29,6 +33,10 @@ def Brilho(data_validation_source, firefly, DB_V):
     sentence_counter = 0
     with open(data_validation_source,encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
         csv_reader = csv.reader(csv_file, delimiter=';')
+        TP=0
+        FP=0
+        TN=0
+        FN=0
         for row in csv_reader:
             sentence_counter = sentence_counter + 1
             t = Text(str.split(str.upper(row[1])), row[0])
@@ -46,12 +54,24 @@ def Brilho(data_validation_source, firefly, DB_V):
                         first = 1
                     prob = 1 - prob
                 error = float(t.probability) - prob;
+                if (prob >= 0.5 and float(t.probability) >= 0.5) or (prob <= 0.5 and float(t.probability) <= 0.5):
+                    if prob >= 0.5:
+                        TP = TP+1
+                    else:
+                        TN = TN+1
+                else:
+                    if prob >= 0.5:
+                        FP = FP+1
+                    else:
+                        FN = FN+1
                 if error > 0:
                     positive_error += error
                 else:
                     negative_error += error
                 del t
-    return (positive_error + abs(negative_error))/sentence_counter #retorna o erro mais 0.000001 para evitar divisão por 0
+    #return (positive_error + abs(negative_error))/sentence_counter #retorna o erro mais 0.000001 para evitar divisão por 0
+    return (TP+TN)/(sentence_counter)
+    #return (alfas.getalfaS(0) + alfas.getalfaS(1) + alfas.getalfaS(2) + alfas.getalfaS(3) + alfas.getalfaS(4))
 
 
 def validation_files_creation(number_of_slices, validation_slice, source_file, output_directory): #numero de divisões do arquivo de entrada e divisão selecionada para validação
@@ -275,7 +295,7 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     with open(report_dir + report_name_o + "/report.out", "w") as report:  # abre arquivo de relatório
         orig_stdout = sys.stdout  # guarda saida padrão
         sys.stdout = report  # troca saida padrão por relatório
-        bests = lplFirefly(n_alfas, 50, 1, 1, 1, 100, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
+        bests = lplFirefly(n_alfas, 100, 0.8, 0.85, 0.5, 30, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
         print("Melhores fireflies:")
         print(bests)
         sys.stdout = orig_stdout  # reseta saída
@@ -289,7 +309,7 @@ if __name__ == "__main__":
     # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
     print("Inicio")
     x = input()
-    main_validation('../database/LIAR_1_1000.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
+    main_validation('../database/LIAR_1_100.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
 
 
 # ================= anotações ===========================

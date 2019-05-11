@@ -9,7 +9,7 @@ class DB:
     path = None
     filename = None
 
-    debug = False
+    debug = None
     debug_filename = None
     terminal = None
     ram = False
@@ -56,16 +56,15 @@ class DB:
     # connection = sqlite3.connect("file::memory:?cache=shared")
     def __init__(self, path='database/', filename='database', debug=False, debug_filename='database_debug',
                  connection=None, run_on_ram=False):
-        print("build db")
         self.path = path
         self.filename = filename
         if connection:
             self.conn = connection
         else:
             if not run_on_ram:
-                self.conn = sqlite3.connect(path + filename + '.db')
+                self.conn = sqlite3.connect(path + filename + '.db', check_same_thread=False)
             else:
-                self.conn = sqlite3.connect(":memory:")  # cria banco na memoria
+                self.conn = sqlite3.connect(":memory:", check_same_thread=False)  # cria banco na memoria
                 self.ram = True
                 if os.path.isfile(run_on_ram):
                     self.run_sql_file(run_on_ram, self.conn)
@@ -291,8 +290,8 @@ class DB:
 
         return self.query(
             'SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB '
-            'WHERE PHRASE_ID = ' + str(phrase) + ' '
-                                                 'GROUP BY PHRASE_ID, PROBABILITY;'
+            'WHERE PHRASE_ID = ' + str(phrase) +
+            ' GROUP BY PHRASE_ID, PROBABILITY;'
         )
 
     def get_phrase_prob_count(self, phrase, prob):
@@ -307,8 +306,8 @@ class DB:
 
         return self.query(
             'SELECT COUNT(*) FROM PHRASES_PROB '
-            'WHERE PHRASE_ID = ' + str(phrase) + ' '
-                                                 'AND PROBABILITY = ' + str(prob) + ';'
+            'WHERE PHRASE_ID = ' + str(phrase) +
+            ' AND PROBABILITY = ' + str(prob) + ';'
         )
 
     def get_phrases_with_prob(self, prob):
@@ -321,6 +320,6 @@ class DB:
         """
         return self.query(
             'SELECT PHRASE_ID, COUNT(*) FROM PHRASES_PROB '
-            'WHERE PROBABILITY = ' + str(prob) + ' '
-                                                 'GROUP BY PHRASE_ID;'
+            'WHERE PROBABILITY = ' + str(prob) +
+            ' GROUP BY PHRASE_ID;'
         )

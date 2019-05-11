@@ -9,6 +9,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import os
 import configparser
+from multiprocessing.dummy import Pool
 
 
 def alpha_index(prob, dimension):
@@ -37,7 +38,7 @@ def brilho(data_validation_source, w_firefly, db: DB):
                 text_prob = 1
 
                 for phrase in t.phrases:
-                    phrase_prob = db.get_phrase_id(phrase)
+                    phrase_prob = db.get_phrase_prob(phrase)
                     index = alpha_index(phrase_prob, firefly_dimension)
                     used_alphas.append(index)  # saves the index of the used alpha power
                     text_prob *= (1 - phrase_prob) ** w_firefly[index]
@@ -49,8 +50,32 @@ def brilho(data_validation_source, w_firefly, db: DB):
 
                 del used_alphas
                 del t
-        # TODO: normalizar
-    return 1
+
+        alpha_error = normalize(alpha_error)
+
+        # TODO: verificar se é isso mesmo
+        temp = []
+        for alpha_cluster in alpha_error:
+            if not alpha_cluster:
+                temp.append(0)
+            else:
+                temp.append(sum(alpha_cluster) / len(alpha_cluster))
+        temp = normalize(np.array(temp))
+        powers = np.zeros(firefly_dimension)
+        dif = abs(powers - temp) + 1
+        total = sum(dif)
+        s = 0
+
+        if total:
+            dif = dif / total
+            for i in range(firefly_dimension):
+                if dif[i]:
+                    s += dif[i] * np.log(dif[i])
+        return -s
+
+
+def brilho_helper(args):
+    return brilho(*args)
 
 
 def move_fireflies(w_fireflies, brightness, distance, alpha, gamma):
@@ -95,16 +120,19 @@ def _brilho(powers, w_firefly):
 
 
 # Normalizes a array
-def normalize(unormalized):
-    normalized = []
-    for i, unnormal in enumerate(unormalized):
-        total = sum(unnormal)
-        temp = []
-        for j, dimension in enumerate(unnormal):
-            temp.append(dimension / total)
-        normalized.append(temp)
-
-    return np.array(normalized)
+def normalize(array) -> np.ndarray:
+    array = np.array([np.array(item) for item in array])
+    temp = array
+    if isinstance(array[0], np.ndarray):
+        for i, a in enumerate(array):
+            temp[i] = normalize(a)
+    else:
+        total = sum(array)
+        normalized = []
+        for i, item in enumerate(array):
+            normalized.append(item / total)
+        temp = normalized
+    return temp
 
 
 # Generates a random normalized firefiles position
@@ -112,10 +140,14 @@ def init_ff(n, d):
     return normalize(np.random.rand(n, d))
 
 
-def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95, max_generation=100, data_source="",
-            database="", file=None):
-    from classes.validation import Brilho
-    # DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
+def firefly(dimension, number_fireflies=50, gamma=0.7, alpha=0.002, delta=0.95, max_generation=100, data_source="",
+            database="", file=None, processes=0):
+    if processes:
+        db = []
+        for i in range(processes):
+            db.append(DB(database + "/", "database", debug=False, run_on_ram=database + "/database.sql"))
+    else:
+        db = DB(database + "/", "database", debug=False, run_on_ram=database + "/database.sql")
     """"
     :param dimension: dimension of the fireflies
     :param number_fireflies: number of agents
@@ -142,8 +174,23 @@ def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95,
 
     for i in range(max_generation):
         # get birghtness of generation
-        for j in range(number_fireflies):
-            brightness[j] = _brilho(powers, w_fireflies[j])
+        if processes:
+            for j in range(0, number_fireflies, processes):
+                pool = Pool(processes)
+                args = []
+                for process in range(processes):
+                    if j + process < number_fireflies:
+                        args.append((data_source, w_fireflies[j], db[process]))
+                results = pool.map(brilho_helper, args)
+                for process in range(processes):
+                    if j + process < number_fireflies:
+                        brightness[j + process] = results[process]
+                pool.close()
+                pool.join()
+        else:
+            for j in range(number_fireflies):
+                # brightness[j] = _brilho(powers, w_fireflies[j])
+                brightness[j] = brilho(data_source, w_fireflies[j], db)
 
         index = np.argsort(brightness)[::-1]  # best fireflies index order; brightness[index[0]] = best brightness
         brightness = np.sort(brightness)[::-1]  # ordering brightness; [0] = best brightness
@@ -151,10 +198,7 @@ def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95,
         w_fireflies = w_fireflies[index]  # ordering fireflies; [0] = best firefly
         best_firefly = w_fireflies[0]  # storing the best firefly of genereation
 
-        best_brightness.append(
-            sum(abs(best_firefly[0] - powers)) / dimension
-        )
-        # print("GERAÇÃO " + format(i, "000") + ": " + str(best_brightness))
+        best_brightness.append(brightness[0])
         print("GERAÇÃO " + format(i, "000") + ": " + str(best_firefly))
         print("Melhor brilho: " + str(brightness[0]))
         print("Melhor firefly: " + str(index[0]))
@@ -180,13 +224,14 @@ def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95,
 
     dif = powers - best_firefly
 
-    plt.text(max_generation / 2,
-             (best_brightness[0] + best_brightness[-1]) / 2,
-             "Padrão ouro: " + str(powers) +
-             "\nEncontrado: " + str(np.round(best_firefly, 5)) +
-             "\nDiferença: " + str(np.round(dif, 5)),
-             horizontalalignment='center',
-             fontsize=10
+    plt.text(
+        max_generation / 2,
+        (best_brightness[0] + best_brightness[-1]) / 2,
+        "Padrão ouro: " + str(powers) +
+        "\nEncontrado: " + str(np.round(best_firefly, 5)) +
+        "\nDiferença: " + str(np.round(dif, 5)),
+        horizontalalignment='center',
+        fontsize=10
     )
     filename = str(np.round(dif, 3)) + '-' + str(original_alpha) + '_' + str(gamma) + '_' + str(delta) + '.png'
     plt.savefig('../Reports/firefly/graphs/' + filename)
@@ -247,4 +292,4 @@ def main():
     print('Delta: ' + str(end - start))
 
 
-main()
+# main()

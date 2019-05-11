@@ -8,12 +8,6 @@ import csv
 import os
 
 
-def call_firefly():
-    db = DB()
-    # fireflies = Firefly(db.get_phrase_count())
-    # fireflies = Firefly(10)
-
-
 def finaliza():
     a = input('Deseja fechar o programa? S/N')
     if str.upper(a) in {'S', 'Y', '1'}:

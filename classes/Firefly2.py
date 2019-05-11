@@ -1,12 +1,56 @@
 # encoding: utf-8
-import random
+import csv
 import math
+import random
 import numpy as np
 from classes.db import DB
+from classes.text import Text
 from datetime import datetime
 import matplotlib.pyplot as plt
 import os
 import configparser
+
+
+def alpha_index(prob, dimension):
+    ret = int(prob / (1 / dimension))
+    if ret == dimension:
+        return dimension - 1
+    return ret
+
+
+def brilho(data_validation_source, w_firefly, db: DB):
+    firefly_dimension = len(w_firefly)
+    with open(data_validation_source, encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+
+        total_error = 0
+
+        alpha_error = []  # stores the alpha power error for each index
+        for i in range(firefly_dimension):
+            alpha_error.append([])  # creating the lists for each alpha power
+
+        for row in csv_reader:
+            t = Text(str.split(str.upper(row[1])), row[0])
+            if t:
+                t.build_phrases(3)
+                used_alphas = []
+                text_prob = 1
+
+                for phrase in t.phrases:
+                    phrase_prob = db.get_phrase_id(phrase)
+                    index = alpha_index(phrase_prob, firefly_dimension)
+                    used_alphas.append(index)  # saves the index of the used alpha power
+                    text_prob *= (1 - phrase_prob) ** w_firefly[index]
+
+                error = abs(float(t.probability) - text_prob)
+                total_error += error
+                for alpha in used_alphas:
+                    alpha_error[alpha].append(error)  # saves the error of the used alphas; it can repeat an index
+
+                del used_alphas
+                del t
+        # TODO: normalizar
+    return 1
 
 
 def move_fireflies(w_fireflies, brightness, distance, alpha, gamma):
@@ -124,6 +168,7 @@ def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95,
         w_fireflies = move_fireflies(w_fireflies, brightness, distances, alpha, gamma)
         alpha *= delta
 
+    # graphs setup
     plt.plot(best_brightness)
     plt.xlabel("Gerações")
     plt.ylabel("Proximidade do padrão ouro")

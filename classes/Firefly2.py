@@ -3,7 +3,6 @@ import random
 import math
 import numpy as np
 from classes.db import DB
-import random
 from datetime import datetime
 import matplotlib.pyplot as plt
 import os
@@ -69,8 +68,8 @@ def init_ff(n, d):
     return normalize(np.random.rand(n, d))
 
 
-def lplFirefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95, max_generation=100, data_source="",
-               database="", file=None):
+def firefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.95, max_generation=100, data_source="",
+            database="", file=None):
     from classes.validation import Brilho
     # DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
     """"
@@ -162,45 +161,45 @@ def lplFirefly(dimension, number_fireflies=100, gamma=0.7, alpha=0.002, delta=0.
     return best_firefly
 
 
-start = datetime.now()
-it = 0
+def main():
+    start = datetime.now()
+    ini_filename = '../Reports/firefly/firefly.ini'
 
-ini_filename = '../Reports/firefly/firefly.ini'
+    config = configparser.ConfigParser()
+    config.read(ini_filename)
 
-config = configparser.ConfigParser()
-config.read(ini_filename)
+    exists = os.path.isfile('../Reports/firefly/firefly.csv')
 
-exists = os.path.isfile('../Reports/firefly/firefly.csv')
-file = None
-if exists:
-    file = open('../Reports/firefly/firefly.csv', mode='a')
-else:
-    file = open('../Reports/firefly/firefly.csv', mode='w')
-    file.write('sep=;\n')
-    file.write('"firefly";"alpha";"gamma";"delta";"padrão ouro";"encontrado";"diferença"\n')
+    if exists:
+        file = open('../Reports/firefly/firefly.csv', mode='a')
+    else:
+        file = open('../Reports/firefly/firefly.csv', mode='w')
+        file.write('sep=;\n')
+        file.write('"firefly";"alpha";"gamma";"delta";"padrão ouro";"encontrado";"diferença"\n')
 
-_delta = [float(config['delta']['run']), float(config['delta']['end']), float(config['delta']['step'])]
-_gamma = [float(config['gamma']['run']), float(config['gamma']['end']), float(config['gamma']['step'])]
-_alpha = [float(config['alpha']['run']), float(config['alpha']['end']), float(config['alpha']['step'])]
+    _delta = [float(config['delta']['run']), float(config['delta']['end']), float(config['delta']['step'])]
+    _gamma = [float(config['gamma']['run']), float(config['gamma']['end']), float(config['gamma']['step'])]
+    _alpha = [float(config['alpha']['run']), float(config['alpha']['end']), float(config['alpha']['step'])]
 
-for delta in np.arange(_delta[0], _delta[1], _delta[2]):
-    for gamma in np.arange(_gamma[0], _gamma[1], _gamma[2]):
-        for alpha in np.arange(_alpha[0], _alpha[1], _alpha[2]):
-            lplFirefly(5, alpha=alpha, gamma=gamma, delta=delta, file=file)
-            file.flush()
-            os.fsync(file.fileno())
-            config['delta']['run'] = str(delta)
-            config['gamma']['run'] = str(gamma)
-            config['alpha']['run'] = str(alpha)
+    for delta in np.arange(_delta[0], _delta[1], _delta[2]):
+        for gamma in np.arange(_gamma[0], _gamma[1], _gamma[2]):
+            for alpha in np.arange(_alpha[0], _alpha[1], _alpha[2]):
+                firefly(5, alpha=alpha, gamma=gamma, delta=delta, file=file)
+                file.flush()
+                os.fsync(file.fileno())
+                config['delta']['run'] = str(delta)
+                config['gamma']['run'] = str(gamma)
+                config['alpha']['run'] = str(alpha)
 
-            with open(ini_filename, 'w') as config_file:
-                config.write(config_file)
+                with open(ini_filename, 'w') as config_file:
+                    config.write(config_file)
 
-file.close()
+    file.close()
 
-print(it)
-end = datetime.now()
-print('Começou: ' + start.strftime("%H:%M:%S"))
-print('Terminou: ' + end.strftime("%H:%M:%S"))
-print('Delta: ' + str(end - start))
+    end = datetime.now()
+    print('Começou: ' + start.strftime("%H:%M:%S"))
+    print('Terminou: ' + end.strftime("%H:%M:%S"))
+    print('Delta: ' + str(end - start))
 
+
+main()

@@ -1,6 +1,9 @@
-#criar csv com os textos de treinamento
+# criar csv com os textos de treinamento
 # encoding: utf-8
 import csv
+
+from numpy.lib.index_tricks import nd_grid
+
 from classes.text import Text
 from classes.db import DB
 from pathlib import Path
@@ -8,6 +11,7 @@ import random
 import datetime
 import sys
 import os
+
 
 class AlfaCluster:
     # inicializa array de alfas por cluster com o numero de alfas e o array
@@ -17,15 +21,15 @@ class AlfaCluster:
 
     # retorna o valor alfa para uma dada probabilidade
     def getalfa(self, prob):
-        for i in range(0, self.n):
-            if prob <= (i+1)/self.n:
-                return self.arr[i]
+        return prob / (1/self.n)
 
     def getalfaS(self, index):
-        if index < self.n and index >= 0:
+        if 0 <= index < self.n:
             return self.arr[index]
 
     # retorna o valor do brilho
+
+
 def Brilho(data_validation_source, firefly, DB_V):
     alfas = AlfaCluster(len(firefly), firefly)
     positive_error = 0  # erro positivo
@@ -208,6 +212,7 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                     del t
     return 1-(positive_error+abs(negative_error))/sentence_counter #retorna o erro mais 0.000001 para evitar divisão por 0
 
+
 def validation_generate_reportname(appendix = ""):
     now = datetime.datetime.now()
     return "report" + str(now.day) + str(now.month) + str(now.year) + str(now.hour) + str(now.minute) + str(now.second) + appendix
@@ -215,6 +220,7 @@ def validation_generate_reportname(appendix = ""):
 
 def validation_report_directory(directory_name):
     os.mkdir(directory_name)
+
 
 def validation_train(report_dir, source_name):
     line_count = 0;
@@ -244,7 +250,8 @@ def validation_train(report_dir, source_name):
 
 def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     temp  = 1
-    from classes.Firefly import lplFirefly
+    # from classes.Firefly import lplFirefly
+    from classes.Firefly2 import firefly
     # etapa de treinamento inicial, naive bayes
 
     # gera nome do relatório original
@@ -294,22 +301,26 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     print("Executa firefly")
     with open(report_dir + report_name_o + "/report.out", "w") as report:  # abre arquivo de relatório
         orig_stdout = sys.stdout  # guarda saida padrão
-        sys.stdout = report  # troca saida padrão por relatório
-        #bests = lplFirefly(n_alfas, 100, 0.8, 0.85, 0.5, 30, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
+        # sys.stdout = report  # troca saida padrão por relatório
+        bests = firefly(n_alfas, max_generation=50,
+                        data_source=report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv',
+                        database_path=report_dir + report_name_o + '_' + str(best_slice),
+                        processes=16)
         print("Melhores fireflies:")
-        #print(bests)
+        print(bests)
         sys.stdout = orig_stdout  # reseta saída
         report.close()  # fechar arquivo de relatório
 
-    print("Melhores fireflies")
+    # print("Melhores fireflies")
     #print(bests)
-    x = input()
+    # x = input()
+
 
 if __name__ == "__main__":
     # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
     print("Inicio")
-    x = input()
-    main_validation('../database/LIAR_1_10700.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
+    # x = input()
+    main_validation('../database/LIAR_1_10700.csv', "../reports/", 1, 5, [1, 1, 1, 1, 1])
 
 
 # ================= anotações ===========================

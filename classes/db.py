@@ -5,6 +5,7 @@ import datetime
 from classes.phrase import Phrase
 
 
+# TODO: Criar e ler dumps zipados
 class DB:
     path = None
     filename = None

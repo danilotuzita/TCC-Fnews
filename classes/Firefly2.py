@@ -318,10 +318,10 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
         "gamma: " + str(gamma) + "; " +
         "delta: " + str(delta)
     )
-    filename = \
+    filename = 'firefly' + str(phrase_size) + \
         datetime.now().strftime("%Y%m%d_%H%M%S") + '-' + str(max_generation) + '-' + \
         str(original_alpha) + '_' + str(gamma) + '_' + str(delta) + '.png'
-    plt.savefig('../Reports/firefly/graphs/' + filename)
+    plt.savefig('../experiments/1/graphs/' + filename)
     plt.clf()
 
     if file:
@@ -426,19 +426,95 @@ def main3(ff, text, path='../Reports/base_full/testes', db=None, ps=3):
         )
 
 
-# main()
-# main2()
-
-db3 = DB('../Reports/base_full/testes' + "/", "database-dump", debug=False, run_on_ram='../Reports/base_full/testes' + '/basefull_phrases3.sql')
-db3.ram = False
-db2 = DB('../Reports/base_full/testes' + "/", "database-dump", debug=False, run_on_ram='../Reports/base_full/testes' + '/basefull_phrases2.sql')
-db2.ram = False
-t = input()
-
-while t:
-    print("FF3   : ", main3([0.01516190, 0.13934191, 0.34223577, 0.26711407, 0.23614635], t, db=db3, ps=3))
-    print("FF2   : ", main3([0.02620581, 0.15741069, 0.36506735, 0.14562509, 0.30569106], t, db=db2, ps=2))
-    print("WHALES: ", main3([0.11556000, 0.17738700, 0.01242800, -0.4284020, 0.02998000], t, db=db3, ps=3))
-
+def main4():
+    db3 = DB('../Reports/base_full/testes' + "/", "database-dump", debug=False,
+             run_on_ram='../Reports/base_full/testes' + '/basefull_phrases3.sql')
+    db3.ram = False
+    db2 = DB('../Reports/base_full/testes' + "/", "database-dump", debug=False,
+             run_on_ram='../Reports/base_full/testes' + '/basefull_phrases2.sql')
+    db2.ram = False
     t = input()
 
+    while t:
+        print("FF3   : ", main3([0.01516190, 0.13934191, 0.34223577, 0.26711407, 0.23614635], t, db=db3, ps=3))
+        print("FF2   : ", main3([0.02620581, 0.15741069, 0.36506735, 0.14562509, 0.30569106], t, db=db2, ps=2))
+        print("WHALES: ", main3([0.11556000, 0.17738700, 0.01242800, -0.4284020, 0.02998000], t, db=db3, ps=3))
+
+        t = input()
+
+
+def train(file, phrase_size):
+    db = DB(path='', filename=file, run_on_ram=True)
+    with open(file, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+        reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
+        for row in reader:  # para cada linha
+            t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
+            if t:
+                t.build_phrases(phrase_size)
+                db.insert_text(t)
+                del t
+            else:
+                return -100
+
+
+def isprimentos(path='../experiments/1', treino='treino.csv', ff='firefly.csv', validation='validation.csv',
+                phrase_size=[2, 3]):
+    for ps in phrase_size:
+        print("Start loop for phrase size: ", ps)
+        start = datetime.now()
+        print("Load DB: ", path + '/database' + str(ps) + '.sql')
+        db = DB(run_on_ram=path + '/database' + str(ps) + '.sql')
+        print("DB Loaded")
+        db.ram = False
+        print("Finding Probability")
+        dbh = get_all_phrases_prob(path + '/' + ff, db, ps)
+        print("to_file")
+        dbh.to_file(path, 'dbh' + str(ps) + '.txt')
+
+        print("Calculating firefly")
+        best_ff = firefly(
+            dimension=5,
+            number_fireflies=100,
+            max_generation=100,
+            data_source=path + '/' + ff,
+            database_path=path,
+            processes=16,
+            phrase_size=ps,
+            dbh=dbh
+        )
+        print('BEST FIREFLY: ', best_ff)
+        print("")
+
+        print("Testing")
+        output = open(path + '/' + 'results' + str(ps) + '.csv')
+        output.write('text;grand_truth;calculated;abs_dif\n')
+        row_number = 0
+        with open(path + '/' + validation, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+            reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
+            for row in reader:
+                line = row[0] + ';' + str(row[1]) + ';'
+                text_prob = calc_text_prob(row[0], db, best_ff, ps)
+                difference = float(row[1]) - text_prob
+                line += str(text_prob) + ';' + str(difference)
+                output.write(line + '\n')
+                row_number += 1
+
+        print(row_number, " lines tested")
+        output.close()
+        print("Saving parameters")
+        description = open(path + '/' + 'desc' + str(ps) + '.txt')
+        description.write(
+            'Path:        ' + path + '\n' +
+            'Train DB:    ' + treino + '\n' +
+            'Firefly:     ' + ff + '\n' +
+            'Validation:  ' + validation + '\n' +
+            'Found FF:    ' + best_ff + '\n' +
+            'Phrase size: ' + str(ps) + '\n' +
+            'Start time:  ' + start.strftime("%H:%M:%S") + '\n' +
+            'End time:    ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+            'Delta time:  ' + str(start - datetime.now()) + '\n'
+        )
+        description.close()
+
+
+isprimentos()

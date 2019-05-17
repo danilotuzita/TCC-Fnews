@@ -136,13 +136,15 @@ def calc_text_prob(text="", database=None, w_firefly=(1, 1, 1, 1, 1), phrase_siz
         used_clusters[alpha_index(phrase_prob, firefly_dimension)] += 1
 
     used_clusters = normalize(used_clusters)
+    if not len(t.phrases):
+        return -1
 
     found_ratio = 1 - (not_found / len(t.phrases))
-    print("Found: ", len(t.phrases) - not_found, " of ", len(t.phrases), " | ", found_ratio)
+    # print("Found: ", len(t.phrases) - not_found, " of ", len(t.phrases), " | ", found_ratio)
     if found_ratio:
-        return calc_prob(used_clusters, w_firefly)
+        return [calc_prob(used_clusters, w_firefly), len(t.phrases) - not_found, len(t.phrases)]
     else:
-        return -1
+        return [-1, 0, len(t.phrases)]
 
 
 def calc_prob(used_clusters=(0, 0, 0), w_firefly=(1, 1, 1)):
@@ -333,7 +335,7 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
             '"' + str(best_firefly) + '"\n'
         )
 
-    return best_firefly
+    return [best_brightness, best_firefly]
 
 
 def main():
@@ -462,59 +464,92 @@ def isprimentos(path='../experiments/1', treino='treino.csv', ff='firefly.csv', 
     for ps in phrase_size:
         print("Start loop for phrase size: ", ps)
         start = datetime.now()
-        print("Load DB: ", path + '/database' + str(ps) + '.sql')
-        db = DB(run_on_ram=path + '/database' + str(ps) + '.sql')
+
+        # Setting up DATABASE
+        database_filename = 'database' + str(ps) + '.sql'
+        print("Load DB: ", path + '/' + database_filename)
+        db = DB(run_on_ram=path + '/' + database_filename)
         print("DB Loaded")
         db.ram = False
-        print("Finding Probability")
-        dbh = get_all_phrases_prob(path + '/' + ff, db, ps)
-        print("to_file")
-        dbh.to_file(path, 'dbh' + str(ps) + '.txt')
 
-        print("Calculating firefly")
-        best_ff = firefly(
-            dimension=5,
-            number_fireflies=100,
-            max_generation=100,
-            data_source=path + '/' + ff,
-            database_path=path,
-            processes=16,
-            phrase_size=ps,
-            dbh=dbh
-        )
+        # Setting up DBH
+        dbh_filename = 'dbh' + str(ps) + '.txt'
+        if os.path.isfile(path + '/' + dbh_filename):
+            print("DBH already exists")
+            print("Loading DBH: ", dbh_filename)
+            dbh = DbHandler()
+            dbh.from_file(path, dbh_filename)
+            print("DBH Loaded")
+        else:
+            print("Finding Probability")
+            dbh = get_all_phrases_prob(path + '/' + ff, db, ps)
+            print("to_file")
+            dbh.to_file(path, 'dbh' + str(ps) + '.txt')
+
+        # Setting up Firefly
+        best_ff = []
+        config = configparser.ConfigParser()
+        ff_filename = 'ff' + str(ps) + '.ini'
+        if os.path.isfile(path + '/' + ff_filename):
+            print("Firefly already exists")
+            print("Loading Firefly: ", ff_filename)
+            config.read(path + '/' + ff_filename)
+            temp = str.split(config['Firefly']['alpha_powers'])
+            for t in temp:
+                best_ff.append(float(t))
+        else:
+            print("Calculating firefly")
+            [brightness, best_ff] = firefly(
+                dimension=5,
+                number_fireflies=100,
+                max_generation=100,
+                data_source=path + '/' + ff,
+                database_path=path,
+                processes=16,
+                phrase_size=ps,
+                dbh=dbh
+            )
+            config.add_section('Firefly')
+            best_ff = str(best_ff)
+            best_ff = best_ff.replace('[', '')
+            best_ff = best_ff.replace(']', '')
+            config.set('Firefly', 'alpha_powers', best_ff)
+            config.set('Firefly', 'brightness', brightness)
+            config.write(path + '/' + ff_filename)
+
         print('BEST FIREFLY: ', best_ff)
         print("")
 
+        # Setting up Tests
         print("Testing")
-        output = open(path + '/' + 'results' + str(ps) + '.csv')
-        output.write('text;grand_truth;calculated;abs_dif\n')
+        output = open(path + '/' + 'results' + str(ps) + '.csv', 'w')
+        output.write('text;grand_truth;calculated;dif;found phrases;out of\n')
         row_number = 0
         with open(path + '/' + validation, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
             reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
             for row in reader:
-                line = row[0] + ';' + str(row[1]) + ';'
-                text_prob = calc_text_prob(row[0], db, best_ff, ps)
-                difference = float(row[1]) - text_prob
-                line += str(text_prob) + ';' + str(difference)
+                line = row[1] + ';' + str(row[0]) + ';'
+                [text_prob, found, out_of] = calc_text_prob(row[1], db, best_ff, ps)
+                difference = float(row[0]) - text_prob
+                line += str(text_prob) + ';' + str(difference) + ';' + str(found) + ';' + str(out_of)
                 output.write(line + '\n')
                 row_number += 1
 
         print(row_number, " lines tested")
         output.close()
-        print("Saving parameters")
-        description = open(path + '/' + 'desc' + str(ps) + '.txt')
-        description.write(
-            'Path:        ' + path + '\n' +
-            'Train DB:    ' + treino + '\n' +
-            'Firefly:     ' + ff + '\n' +
-            'Validation:  ' + validation + '\n' +
-            'Found FF:    ' + best_ff + '\n' +
-            'Phrase size: ' + str(ps) + '\n' +
-            'Start time:  ' + start.strftime("%H:%M:%S") + '\n' +
-            'End time:    ' + datetime.now().strftime("%H:%M:%S") + '\n' +
-            'Delta time:  ' + str(start - datetime.now()) + '\n'
-        )
-        description.close()
+        # print("Saving parameters")
+        # description = open(path + '/' + 'desc' + str(ps) + '.txt', 'w')
+        # description.write(
+        #     'Path:        ' + path + '\n' +
+        #     'Train DB:    ' + treino + '\n' +
+        #     'Firefly:     ' + ff + '\n' +
+        #     'Validation:  ' + validation + '\n' +
+        #     'Found FF:    ' + best_ff + '\n' +
+        #     'Phrase size: ' + str(ps) + '\n' +
+        #     'Start time:  ' + start.strftime("%H:%M:%S") + '\n' +
+        #     'End time:    ' + datetime.now().strftime("%H:%M:%S") + '\n'
+        # )
+        # description.close()
 
 
 isprimentos()

@@ -89,15 +89,16 @@ def train():
         debug_mode = True
 
     start = datetime.datetime.now()
-    db = DB(debug=debug_mode)
+    db = DB(debug=debug_mode, filename='basefull', run_on_ram=True)
     with open(default, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
         for row in reader:  # para cada linha
             t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
             if t:
                 t.build_phrases(3)
-                t.print_phrases()
-                db.insert_text(t, True)
+                if debug_mode:
+                    t.print_phrases()
+                db.insert_text(t, debug_mode)
                 del t
             else:
                 return -100
@@ -107,11 +108,4 @@ def train():
     print('Terminou: ' + end.strftime("%H:%M:%S"))
     print('Delta: ' + str(end - start))
 
-
-# texto = 'nós temos que testar o modelo q nós temos (mesmo que esteja quebrado) com o firefly'
-# t = Text(str.split(str.upper(texto), ' '))  # cria um Text
-# t.build_phrases(3)
-# t.print_phrases()
-
 main()
-# call_firefly()

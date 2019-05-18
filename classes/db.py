@@ -5,6 +5,7 @@ import datetime
 from classes.phrase import Phrase
 
 
+# TODO: Criar e ler dumps zipados
 class DB:
     path = None
     filename = None
@@ -196,7 +197,7 @@ class DB:
         return pid
 
     # retorna a probabilidade de uma frase / param: default_return - valor que deve retornar caso a frase não exista
-    def get_phrase_prob(self, phrase, default_return=0.5):
+    def get_phrase_prob(self, phrase, default_return=-1):
         pid = self.get_phrase_id(phrase)
         if not pid:
             return default_return

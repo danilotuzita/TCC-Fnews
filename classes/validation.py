@@ -83,10 +83,10 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
         for row in csv_reader:
             reader_line_count += 1
 
-    with open(source_file, newline="") as csv_file:  # escreve tabela de validação
+    with open(source_file, newline="", encoding='utf-8-sig') as csv_file:  # escreve tabela de validação
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open(output_directory + '/validation_tab.csv', mode='w', newline="") as validation_tab:
+        with open(output_directory + '/validation_tab.csv', mode='w', newline="", encoding='utf-8-sig') as validation_tab:
             validation_tab = csv.writer(validation_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE, escapechar='')
             for row2 in csv_reader:
                 writer_line_count += 1
@@ -97,10 +97,10 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
 
     # criar csv com os textos de aprendizado
 
-    with open(source_file) as csv_file:  # escreve tabela de aprendizagem
+    with open(source_file, encoding='utf-8-sig') as csv_file:  # escreve tabela de aprendizagem
         csv_reader = csv.reader(csv_file, delimiter=';')
 
-        with open(output_directory + '/training_tab.csv', mode='w', newline="") as training_tab:
+        with open(output_directory + '/training_tab.csv', mode='w', newline="", encoding='utf-8-sig') as training_tab:
             training_tab = csv.writer(training_tab, delimiter=';', quotechar='', quoting=csv.QUOTE_NONE,
                                         escapechar='')
             for row2 in csv_reader:
@@ -295,7 +295,7 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     with open(report_dir + report_name_o + "/report.out", "w") as report:  # abre arquivo de relatório
         orig_stdout = sys.stdout  # guarda saida padrão
         sys.stdout = report  # troca saida padrão por relatório
-        #bests = lplFirefly(n_alfas, 100, 0.8, 0.85, 0.5, 30, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
+        bests = lplFirefly(n_alfas, 100, 0.8, 0.85, 0.5, 30, report_dir+report_name_o + '_' + str(best_slice) + '/validation_tab.csv', report_dir+report_name_o + '_' + str(best_slice))
         print("Melhores fireflies:")
         #print(bests)
         sys.stdout = orig_stdout  # reseta saída

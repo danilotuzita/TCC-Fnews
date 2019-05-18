@@ -71,7 +71,7 @@ def lplFirefly(d, n=5, gamma=0.8, alpha=0.2, beta=0.9, maxGenerarion=100, data_s
         for i in range(n):
             threshold = []
             for j in range(n):
-                if Z[i] < Z[j]:
+                if Z[i] > Z[j]:
                     for k in range(d):
                         threshold.append(random.uniform(0, 1))
                     threshold.sort()

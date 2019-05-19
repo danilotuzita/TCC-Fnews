@@ -323,7 +323,7 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
     filename = 'firefly' + str(phrase_size) + \
         datetime.now().strftime("%Y%m%d_%H%M%S") + '-' + str(max_generation) + '-' + \
         str(original_alpha) + '_' + str(gamma) + '_' + str(delta) + '.png'
-    plt.savefig('../experiments/1/graphs/' + filename)
+    plt.savefig('experiments/1/graphs/' + filename)
     plt.clf()
 
     if file:
@@ -551,5 +551,48 @@ def isprimentos(path='../experiments/1', treino='treino.csv', ff='firefly.csv', 
         # )
         # description.close()
 
+def isprimento1():
+    exp = 'Experimento_3_3_10700'
+    words = 4
 
-isprimentos()
+    db = DB(run_on_ram='experiments/1/' + exp + '/database.sql')
+    db.ram = False
+
+    dbh_filename = 'dbh' + exp + '.txt'
+    if os.path.isfile('Reports/experimentos' + '/' + dbh_filename):
+        print("DBH already exists")
+        print("Loading DBH: ", dbh_filename)
+        dbh = DbHandler()
+        dbh.from_file('Reports/experimentos', dbh_filename)
+        print("DBH Loaded")
+    else:
+        print("Finding Probability")
+        dbh = get_all_phrases_prob('experiments/1/' + exp + '/training_tab.csv', db, words)
+        print("to_file")
+        dbh.to_file('Reports/experimentos', dbh_filename)
+
+    [brightness, best_ff] = firefly(
+        dimension=5,
+        number_fireflies=100,
+        max_generation=100,
+        data_source='experiments/1/' + exp + '/training_tab.csv',
+        processes=16,
+        phrase_size=words,
+        dbh=dbh)
+
+    path = 'experiments/1/' + exp
+    output = open(path + '/' + exp + '.csv', 'w')
+    output.write('text;grand_truth;calculated;dif;found phrases;out of\n')
+    row_number = 0
+    with open(path + '/' + 'validation_tab.csv', newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+        reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
+        for row in reader:
+            line = row[1] + ';' + str(row[0]) + ';'
+            [text_prob, found, out_of] = calc_text_prob(row[1], db, best_ff, words)
+            difference = float(row[0]) - text_prob
+            line += str(text_prob) + ';' + str(difference) + ';' + str(found) + ';' + str(out_of)
+            output.write(line + '\n')
+            row_number += 1
+
+    print(row_number, " lines tested")
+    output.close()

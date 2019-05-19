@@ -1,2 +1,2 @@
-from classes.Firefly import lplFirefly as Firefly
-Firefly(15)
+from classes.Firefly2 import isprimento1 as firefly
+firefly()

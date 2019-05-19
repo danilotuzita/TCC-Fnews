@@ -1,0 +1,201 @@
+text;grand_truth;calculated;dif;found phrases;out of
+Point Pleasant Beach does not own its beaches;0.75;-1;1.75;0;6
+In the past year more than 20 percent of Americans have changed their mind about the war in Afghanistan. They conclude we shouldnt be there.;0.25;0.08348539191872861;0.1665146080812714;4;23
+In the last five years 28000 people have been killed along the U.S.-Mexico border.;0;0.16205442522617786;-0.16205442522617786;2;12
+The state of Ohio has one of the lowest unemployment rates in the nation right now and is leading the pack in terms of job creation.;0.25;0.5477315947257022;-0.2977315947257022;3;24
+Says Obama health reform law denies millions access to affordable insurance.;0;-1;1.0;0;9
+Says HB2 hasnt moved the needle one iota on North Carolinas economy.;0.25;-1;1.25;0;10
+Close to 30% of our federal prison population consists of illegal immigrants.;0;-1;1.0;0;10
+Says Rick Scott called education not a core function of the state.;0;-1;1.0;0;10
+The Family Research Council according to some government agencies is a terrorist group.;0;-1;1.0;0;11
+Says Rep. Jim Weidner proposed a bill taking away health care for 80000 of Oregons children.;1;-1;2.0;0;14
+Says that in the 1985 election former Gov. Tom Kean had the largest winning margin for a gubernatorial candidate in Jersey history.;1;1.0;0.0;1;20
+Obamacare is the biggest tax increase in American history.;0;1.0;-1.0;3;7
+You ... said that Barack Obama was not ready to be commander in chief.;1;0.16205442522617786;0.8379455747738221;2;12
+The median male worker in this country has not seen a raise inflation adjusted for 30 years basically.;0.75;1.0;-0.25;3;16
+Milwaukee Mayor Tom Barrett has held the line on property taxes.;0.25;-1;1.25;0;9
+Im the only member of the House of Representatives who raised most of his campaign funds in the last election from small contributions of less than $200.;1;0.21890399236457392;0.7810960076354261;5;25
+Unlike the gridlock in Washington more than 80 percent of the bills we passed during this General Assembly had bipartisan support.;1;1.0;0.0;2;19
+Josh Mandel is lying about his own record. The rating of Ohios investment fund has NOT improved.;0;-1;1.0;0;15
+Rick Scott took $200000 from a family that leased land for drilling and now he is trying to hide from it.;0.5;1.0;-0.5;1;19
+On how money from a possible lease of the Ohio Turnpike would be used;0.5;-1;1.5;0;12
+At the beginning of the last decade ... America had a budget surplus of over $200 billion. By the time I took office we had a one-year deficit of over $1 trillion and projected deficits of $8 trillion over the next decade.;0.75;0.12216030999357164;0.6278396900064284;4;40
+The president has had 1540 of his nominations confirmed only four defeated.;0.5;-1;1.5;0;10
+U.S. taxpayers are being forced to fund Feisal Abdul Raufs trip to the Middle East.;1;1.0;0.0;1;13
+Milwaukee County taxpayers paid $370000 to settle a lawsuit over a decision by Sheriff David A. Clarke Jr. to use untrained corrections officers rather than deputies to patrol the lakefront.;0.25;-1;1.25;0;28
+There are Justice Department policies against FBI Director James Comey discussing details of a federal investigation so close to an election.;0.75;0.422449817464257;0.327550182535743;2;19
+Democratic presidents have been considerably more effective at creating private-sector jobs.;1;1.0;0.0;1;9
+Joe Biden voted against the first Gulf War. He opposed the surge. He wanted to partition Iraq.;1;-1;2.0;0;15
+Says Rush Limbaugh made it clear hed rather see the country fail than President Barack Obama succeed.;0.25;1.0;-0.75;1;15
+One percent of the American people make over 21 percent of all the income in America. That wasnt the way before George Bush became president.;0.5;0.624262921138096;-0.124262921138096;4;23
+Military recruiting went on at Harvard every single day throughout the time Kagan was there.;0.5;-1;1.5;0;13
+Says that under Rick Perrys plan Texas has cut funding for public schools by 25%.;0.75;-1;1.75;0;13
+Says David Perdue wants to abolish the U.S. Department of Education which would cost Georgia schools $1 billion a year and eliminate millions in student loans.;0.5;0.5010209732734736;-0.0010209732734736132;5;24
+The Paul Ryan budget proposal would privatize Medicare.;0.75;1.0;-0.25;2;6
+High school students arrested on campus are twice as likely not to graduate and four times less likely to graduate if theyve appeared in court.;0.75;-1;1.75;0;23
+The United States imprisons more than any nation in the world.;0.5;0.41401839882166847;0.08598160117833153;4;9
+Says Marco Rubio is the one for an open border.;0;1.0;-1.0;1;8
+...Over 30 years federal spending on education has grown by 375 percent but test scores remain flat.;0.75;-1;1.75;0;15
+Says cuts to Medicare affect people who have already paid in. We paid for it.;0.25;-1;1.25;0;13
+David Alameel is giving thousands of dollars to support the Republican Party candidates including John Cornyn and Greg Abbott.;0.25;1.0;-0.75;1;17
+The American healthcare system burns 18 percent of our national GDP. Nobody else is close.;1;1.0;0.0;1;13
+Providences port is 200 miles closer to Europe than any other Eastern port.;0;1.0;-1.0;1;11
+Says you need a photo ID to purchase Sudafed in Texas.;1;-1;2.0;0;9
+Twenty percent of housing in Portlands Pearl District is affordable.;0.75;-1;1.75;0;8
+Says allowing the payroll tax holiday to expire would end up costing another estimated 900000 jobs in 2012.;0.75;-1;1.75;0;16
+Hillary Clinton supported NAFTA and permanent China trade. Pennsylvania lost thousands of jobs.;0.5;-1;1.5;0;11
+Numerous studies have shown that these so-called right-to-work laws do not generate jobs and economic growth.;0.5;-1;1.5;0;14
+Obamas budget plan would take national debt up to about 80 percent of gross national product. ... Historically its been about 40 percent.;1;1.0;0.0;1;21
+Says Hillary Clinton said the Veterans Affairs scandal is over-exaggerated. She said she was satisfied with what was going on.;0.25;1.0;-0.75;1;18
+We now have driven health care costs down to the lowest theyve been in 50 years.;0;1.0;-1.0;1;14
+President Barack Obamas initial response when we heard about the Christmas underwear bomber was to say that this was the act of an isolated extremist.;0.5;0.4397680695818508;0.06023193041814923;2;23
+Says Sen. Sherrod Brown admitted that his $787 billion stimulus law failed and after specifically attacking Republicans for wanting to lower Americans taxes he now claims that his stimulus bill didnt do enough to lower taxes.;0.5;1.0;-0.5;1;34
+In the 1950s A lot of people got rich and they had to pay a top tax rate of 90 percent.;0.75;0.3087937956289891;0.4412062043710109;3;19
+The Charleston S.C. shootershould have never been given a gun but the universal background check was not fast enough.;0.75;-1;1.75;0;17
+Sixty-five percent of the Iraqi people now say its okay to shoot an American soldier.;0.25;1.0;-0.75;1;13
+Twelve judges have thrown out legal challenges to the health care law because they rejected the notion that the health care law was unconstitutional.;0;0.18370751386507;-0.18370751386507;3;22
+Says Gov. Chris Christies proposal to reduce state income taxes would be the second tax cut for the rich by the governor in two years.;0.5;1.0;-0.5;1;23
+Warren Buffett still does support me.;1;-1;2.0;0;4
+Says George LeMieux was one of two Republicans who voted for President Barack Obamas jobs bill.;1;0.3857752024654255;0.6142247975345745;3;14
+A precinct in the Allen West-Patrick Murphy recount has 7 registered voters in Guatemalan community and the tally showed 900 voted!!!!!;0;-1;1.0;0;19
+About 230000 people that were on unemployment when I took office are not on unemployment now.;0.75;0.5075445289662528;0.2424554710337472;2;14
+One person Kathleen Sebelius was going to determine whether or not 10-year-old lung patient Sarah Murnaghan would live or die.;0.25;1.0;-0.75;1;18
+Ron Klein repeatedly voted in favor of amnesty for illegal immigrants.;0;1.0;-1.0;2;9
+Local law enforcement . . . will have access to the [Obamacare] Data Hubs treasure trove of personal info.;0;1.0;-1.0;1;17
+During his tenure as mayor he saw Houstons crime rates drop to the lowest levels in more than 25 years.;1;0.31723003937304883;0.6827699606269512;5;18
+Barack Obamas Columbia University ID says he was a foreign student and went by Barry Soetoro.;0;0.6302041295379296;-0.6302041295379296;2;14
+John McCain one of the richest people in a Senate filled with millionaires says the solution to the housing crisis is for people to get a second job and skip their vacations.;0.25;0.12502523819140066;0.12497476180859934;2;30
+Terry McAuliffe wants to raise your taxes $1700 to pay for his infinite promises.;0;1.0;-1.0;1;12
+Hypocrisy at the Clinton Foundation: Top male staff made on average $218029 while top female staff made $153014 from 2010-2014.;0.5;-1;1.5;0;18
+Since the federal Violence Against Women Act was adopted in 1994 cases of domestic violence have fallen by 67 percent.;0.75;-1;1.75;0;18
+Says federal law enforcement officers cut off questioning of the Christmas Day underwear bomber by giving him a Miranda warning after 30 minutes of questioning.;0.5;-1;1.5;0;23
+On legalizing illegal immigrants.;0.5;-1;1.5;0;2
+Nearly half of all pregnancies in the U.S. are unintended.;1;1.0;0.0;1;8
+We are borrowing Saudi money for Saudi oil with the result being dependency and debt.;0.5;-1;1.5;0;13
+Says there are homes for sale on and around Oswego Lake right now for under $150000 that anyone is welcome to buy.;0.5;-1;1.5;0;20
+Since the president became the president we have lost 3.3 million jobs in the private sector. But you know whos done OK and whos not complaining today? The public sector. Weve gained 590000 public sector jobs.;0.5;0.10607020129870981;0.3939297987012902;3;34
+The top 1 percent pay over half of the entire revenue for this country.;0;0.4634772482231039;-0.4634772482231039;2;12
+The difference over the previous four years between where things were headed and where we brought them to over the last four years is a total of $816 in saved property tax money.;0.25;0.28784690444873495;-0.03784690444873495;3;31
+Chris Christie has not increased the taxes on anyone.;0.5;-1;1.5;0;7
+The United States does not have a system through which growers and dairies can bring a workforce legally into the U.S.;0.25;1.0;-0.75;1;19
+Says he never said he would keep education funding the same.;0;1.0;-1.0;1;9
+Since 1978 college tuition nationwide has gone up something like four times the rate of inflation.;1;1.0;0.0;1;14
+Says Sen. Rob Portman said It would be irresponsible not to cut Medicare.;0.5;-1;1.5;0;11
+Most of if not all of the [DeKalb school construction] projects always came in on or were under budget.;0.75;1.0;-0.25;1;17
+Palin supported right-wing extremist Pat Buchanan for president in 2000.;0;1.0;-1.0;1;8
+Says Sen. Sherrod Brown voted to block American energy production and increase energy taxes.;0.25;1.0;-0.75;1;12
+Says Jeanne Shaheen voted for a measure that would have amounted to a new national energy tax.;0.25;1.0;-0.75;1;15
+Washington D.C. had some of the strictest gun laws in the country. And when they passed them violence skyrocketed.;0.5;0.4634772482231039;0.03652275177689612;2;17
+Seven presidents before Barack Obama -- Republicans and Democrats -- tried to expand health care to all Americans.;0.75;0.28809193225955254;0.46190806774044746;4;16
+While fighting a move to toughen penalties for workplace gender discrimination state Sen. Glenn Grothman said he didnt believe women belonged in the workplace but belonged at home cooking and cleaning and having babies.;0;-1;1.0;0;32
+If you put the $47 billion in revenue raised over 10 years by the Buffett rule into infrastructure you could create 611000 infrastructure jobs.;0;1.0;-1.0;1;22
+What is the proper collective noun for a group of baboons? Believe it or not . . . a Congress!;0;0.3857752024654255;-0.3857752024654255;3;18
+I have repeatedly said that many of the predatory loans that were made in the mortgage system did target African-American and Latino communities.;1;-1;2.0;0;21
+Starting in December 2007 1.4 million jobs were created in Texas. In that same period the rest of the country lost 400000 jobs.;0.75;0.35419658322116887;0.39580341677883113;3;21
+The health reform legislation which Washington passed last year has made it more difficult to hire because its increased costs for employers.;0.25;-1;1.25;0;20
+The CBO the Congressional Budget Office has said that Obamacare will kill 800000 jobs.;0.25;-1;1.25;0;12
+Thompson voted against $250000 caps on damages and almost anything that would make our legal system fairer.;0.25;-1;1.25;0;15
+Texas this fiscal year will have more money in reserve than the other 49 states combined.;0;1.0;-1.0;1;14
+On using the Strategic Petroleum Reserve.;0;-1;1.0;0;4
+Immigrants are more fertile.;0.75;1.0;-0.25;1;2
+The proposed education changes will not cut one teachers pay.;0.75;-1;1.75;0;8
+The number of uninsured people in Massachusetts is about the same as it was when the mandates were passed in 2006.;0;0.5075445289662528;-0.5075445289662528;2;19
+Firearms homicides are down about 40 percent since Texas passed concealed-gun permit law.;0.75;-1;1.75;0;11
+Upwards of 90 percent of women seeking an abortion decide not to have an abortion after seeing an ultrasound.;0;0.10607020129870981;-0.10607020129870981;3;17
+We spend less on defense today as % of GDP than at any time since Pearl Harbor.;0;1.0;-1.0;2;15
+If you got rid of the income tax today youd have about as much revenue as we had 10 years ago.;0.75;0.6452963795270412;0.10470362047295878;3;19
+Says Scott Walker wants to ban common forms of birth control including the pill.;0.5;1.0;-0.5;1;12
+Jason Kander supports [Obamas] plan to bring the remaining suspected terrorists to U.S. soil.;0;-1;1.0;0;12
+Shelby County donated Im sorry gave 44 schools to the city of Memphis.;0.5;1.0;-0.5;1;11
+Top U.S. intelligence officials have toldevery member of Congress including the president were about to be attacked in a serious way because of the threat emanating from Syria and Iraq.;0.5;1.0;-0.5;1;28
+Have the suburbs been inundated with former residents of Atlanta housing projects? Absolutely not.;1;-1;2.0;0;12
+In July 1996 Mitt Romney helped locate the missing teenage daughter of a partner at Bain Capital.;1;-1;2.0;0;15
+Blames Mike McIntyre and Nancy Pelosi for the second straight year of no cost-of-living increases for Social Security beneficiaries.;0.25;1.0;-0.75;1;17
+The government is going to have the right to get into your bank account with the health care bill and make transfers without you knowing it.;0.25;0.2910868106383443;-0.041086810638344295;3;24
+There are mechanisms in place to shut down the Internet privately.;0.5;0.12502523819140066;0.37497476180859934;2;9
+The American people support defunding Obamacare and oppose shutting down the government.;0.25;1.0;-0.75;1;10
+Report that #GOP insisting on changes to Social Security as part of #fiscalcliff 0. BTW those changes are supported by @barackobama.;0.5;-1;1.5;0;19
+Nobody has played clips over and over ...of President Obama saying If they bring a knife to the fight well bring a gun.;1;-1;2.0;0;21
+The people of Rhode Island dont want same-sex marriage.;0;0.4634772482231039;-0.4634772482231039;2;7
+Rep. Paul Ryans Medicare plan lines the pockets of the private insurance companies increases costs for seniors and does not reduce the deficit.;0.5;-1;1.5;0;21
+This year in Congress Connie Mack IV has missed almost half of his votes.;0.25;-1;1.25;0;12
+1/3 of our kids drop out of high school cannot go to college or start a career.;0.25;0.4634772482231039;-0.21347724822310388;4;15
+Not even old Gen. Eisenhower saluted military personnel as president.;0.25;-1;1.25;0;8
+If Wisconsins governor cuts perquisites as much as he plans to do it would still leave workers better off than their private sector counterparts.;1;0.3707678532378603;0.6292321467621397;2;22
+You cant get on an airplane but more than 2000 people on that list have been able to buy a gun.;0.25;-1;1.25;0;19
+74 percent of Republicans support the Affordable Care Act.;0;1.0;-1.0;1;7
+For every $1 spent on afterschool programs we can save over $5 almost $6 in crime costs down the line.;0.5;-1;1.5;0;18
+The federal government has $3 trillion in cash flow so we can pay our bills and wont default.;0.5;1.0;-0.5;1;16
+Says Alex Sink failed Florida homeowners by using predatory lending practices.;0;-1;1.0;0;9
+Over 40 percent of small and mid-size banks that loan money to small businesses have been wiped out since Dodd-Frank has passed.;0.25;1.0;-0.75;1;20
+You cant check out a library book without a photo ID.;0.25;1.0;-0.75;1;9
+Says that Starbucks took Christmas off of their brand new cups.;0;-1;1.0;0;9
+Atmospheric conditions could push a footballs pressure down approximately one-and-a-half pounds per square inch.;0.75;-1;1.75;0;12
+Hillary Clinton supports unlimited abortion on demand up until the moment of birth including partial-birth abortion with taxpayer funding.;0;-1;1.0;0;17
+Under legislation that has cleared the Georgia House some children who are legal refugees could obtain state scholarships to attend private schools.;1;-1;2.0;0;20
+We went from losing 3 million jobs in the last six months of the Bush Administration adding almost 600000 private sector jobs in the first six months of the year.;0.75;0.5168219140042359;0.23317808599576406;12;28
+The STAR Ohio fund just received the highest possible credit rating one of these funds can receive.;0.5;-1;1.5;0;15
+Taxpayers are on the hook ... for less than a third of the proposed new Atlanta Falcons stadium and those funds are repaid from money that comes from outsiders.;0.5;1.0;-0.5;1;27
+In the last 22 months businesses have created more than 3 million jobs. Last year they created the most jobs since 2005.;0.75;1.0;-0.25;2;20
+Every year more than $40 million are leaving Missouri for the Lone Star State.;0.5;-1;1.5;0;12
+A college loan is the only loan in the United States that you cannot refinance when interest rates go down.;0.75;1.0;-0.25;3;18
+The House of Representatives has never passed a resolution of disapproval to condemn a members behavior.;0.75;1.0;-0.25;2;14
+We are younger than our competitors and this is entirely because of immigration.;0.75;-1;1.75;0;11
+Recent international reports show the United States near the bottom among industrialized nations for k-12 academic achievement.;0.5;1.0;-0.5;1;15
+Says 24 million people in this country cant find a full-time job 50 million cant see a doctor when theyre sick 47 million people need government help to feed themselves and 15 million families owe more than the value of their home.;1;0.4634772482231039;0.5365227517768961;2;40
+The policy mistakes that ... the Clintons made got us in large degree to the situation that we are in today with mass incarceration.;0.5;-1;1.5;0;22
+Says he raised average family income by 50 percent during his tenure as Arkansas governor.;0.25;-1;1.25;0;13
+They tried to give us $400 million to build a high-speed train that goes 39 miles an hour.;0.5;-1;1.5;0;16
+Says the CBO estimates that fully extending the Bush tax cuts would add 600000-1.4 million jobs in 2011 and 900000-2.7 million jobs in 2012.;0.5;1.0;-0.5;2;22
+President Reagan did it raised the debt ceiling 18 times. George W. Bush did it seven times.;1;0.6302041295379296;0.3697958704620704;2;15
+According to David Cay Johnston the average American pays about 22 percent of their income to federal taxes. The richest 400 Americans pay about 16 percent of their income to federal taxes.;0.5;0.7297876689450834;-0.2297876689450834;5;30
+Most young Americans right now theyre not covered by health insurance.;0;-1;1.0;0;9
+In 1952 the corporate income tax accounted for 33 percent of all federal tax revenue. Today despite record-breaking profits corporate taxes bring in less than 9 percent.;0.75;0.3707678532378603;0.3792321467621397;2;25
+Over the last 10 years Texas created 33 percent of the net new jobs nationwide.;1;0.5419280852838317;0.45807191471616826;4;13
+Says two-thirds of groups targeted for IRS scrutiny were not conservative.;0;-1;1.0;0;9
+In the class of 1968 at Patrice Lumumba University in Moscow Mahmoud Abbas was one of the members of that class and so was Ali Khamenei. And thats where they first established relationships with the young Vladimir Putin.;0;0.48578270302889404;-0.48578270302889404;2;36
+Last week the Texas State Board of Education SBOE led by Rick Perrys appointee voted to remove Thomas Jefferson from social studies textbook standards. Thats right. Thomas Jefferson... was deleted from a list of historical figures who inspired political change.;0.5;1.0;-0.5;1;38
+As a U.S. senator with salary and perks ‪#Bernie‬ is in the top 1 percent but still paid only 13 percent in taxes last year.;0.25;1.0;-0.75;1;23
+You know we cant just pull out now... The truth of the matter is: If we started today it would take one year one year to get 160000 troops physically out of Iraq logistically.;1;1.0;0.0;3;32
+From 2013-2015 the richest 14 Americans increased their net wealth by more than $157 billion yet the Republican budget would not require these Americans to contribute one penny to deficit reduction.;0.5;1.0;-0.5;1;29
+Says that while Foster was mayor Rick Kriseman was ineffective in the Florida House of Representatives because there was no legislation that passed the House that had Krisemans name on it.;0.5;0.1862206057549517;0.3137793942450483;4;29
+Says Texas routinely gets a lot more federal spending than it pays in taxes.;0.75;-1;1.75;0;12
+Cell phone numbers go public this month.;0;-1;1.0;0;5
+Says it has offered $12 million in savings through 2011 and $184 million in savings over the next 25 years in contract negotiations with the City of Milwaukee.;0.25;0.422449817464257;-0.17244981746425703;2;26
+Clackamas County Commissioners approved a re-negotiated agreement to lower the countys contribution to TriMets Portland-Milwaukie Light Rail project to $19.9 million from $25 million.;0;-1;1.0;0;22
+Says Texas has 11 different felonies you can commit with an oyster.;0.75;-1;1.75;0;10
+The Obama administration is unwinding our nations welfare-to-work requirements.;0;1.0;-1.0;2;7
+Electric car sales in Georgia have dropped dramatically since a $5000 tax credit was eliminated and a $200 annual registration fee was imposed July 1.;1;1.0;0.0;1;23
+The Redskins Training Camp deal generated $40 million in new private investment in the city.;0.5;-1;1.5;0;13
+The GOP budget plan would cut nearly a million jobs.;0.5;-1;1.5;0;8
+There are more people living in this country who were not born here than at anytime in the history of the country.;0.5;0.4152908646699328;0.08470913533006719;5;20
+Says Hillary Clinton defended Syrias President Assad as a possible reformer at the start of that countrys civil war.;0.5;0.422449817464257;0.07755018253574297;2;17
+The Postal Services financial losses result from a 2006 law that drains $5 billion a year from post office revenue while the Postal Service is forced to overpay billions more into federal accounts.;0.5;1.0;-0.5;1;31
+As many as six federal department budget bills have been delayed because of opposition to amendments that would ban Confederate battle flag sales at federal building gift shops.;0.75;1.0;-0.25;1;26
+Shes voted for 60 tax increases hurting the middle class and small businesses.;0;0.25394169805767786;-0.25394169805767786;2;11
+Now in the House of Representatives we have 40 different jobs bills that have passed and almost all of them have been bipartisan.;0.25;0.4235674113971257;-0.17356741139712573;5;21
+Sheila Jackson Lee of Texas said: Hey all you wrinkly white-aged has-beens: Its time for you to die and let the next generation have your spot on the planet.;0;-1;1.0;0;27
+Republican small business tax cut bill spends $80 million for better Google searches not job creation;0.25;-1;1.25;0;14
+A 2013 state law would allow the operator of an iron ore mine in northern Wisconsin to fill in pristine streams and ponds with mine waste.;0.75;0.23777944600804857;0.5122205539919514;3;24
+America is one of the highest-taxed nations in the world.;0.25;1.0;-0.75;3;8
+If black America were a country itd be the 15th wealthiest nation in the world.;0;0.480536378669263;-0.480536378669263;3;13
+Since Republicans took over after the 2010 election the graduation rate in Wisconsin has gone from 86 percent to 88 percent. The black graduation rate has gone from 60 percent to 65 percent. The Latino graduation rate has gone from 65 percent to 71 percent.;0.5;1.0;-0.5;1;43
+It has been estimated that nearly 40 percent of all guns sold in America are sold by private unlicensed sellers either online or through gun shows.;0.25;0.4397680695818508;-0.18976806958185077;2;24
+2008 was the deadliest year of the war in Afghanistan for American forces.;1;-1;2.0;0;11
+Florida teachers are already paid $5000 below the national average.;0.75;-1;1.75;0;8
+Since Rick Perry became governor Texas has gone from 46th in the country to 50th in the population that graduates from high school.;0.5;1.0;-0.5;1;21
+Says Amanda Fritz manages less than 5 percent of city operations.;1;1.0;0.0;1;9
+The streetcar project planned by Mayor Tom Barrett would be a 1900s style trolley.;0.5;1.0;-0.5;1;12
+Americans in the last 30 years have more than doubled the amount of money we are spending per child on education and the results have gotten worse not better.;0.5;0.16176601724335682;0.3382339827566432;3;27
+Polls show that Floridians dont want to repeal the Affordable Care Act.;0.25;1.0;-0.75;1;10
+Says Congressman Bill Pascrell voted to remove the public option from the Affordable Health Care Act.;0;-1;1.0;0;14
+Lawmakers were paid for their off-season efforts to for the first time take the lead in drawing borders for two would-be cities.;1;0.4935113587995832;0.5064886412004168;3;20
+Greg Abbott and his surrogates have referred to women who have been the victims of rape or incest as though somehow what they are confronting is a minor issue.;0;-1;1.0;0;27
+On offshore drilling for energy;1;-1;2.0;0;3
+Under a proposed medical marijuana amendment in Florida you dont get refills -- you get it forever.;0.25;-1;1.25;0;15
+A data-storing microchip would be implanted in the majority of people who opt to become covered by the public health care option.;0;1.0;-1.0;1;20
+Enacting the Right-to-Carry Act would amount to expanding the rights of sex offenders terrorists child predators and abusers to carry concealed weapons across state lines.;0.5;0.4397680695818508;0.06023193041814923;2;23
+I havent missed a vote since 1993.;1;-1;2.0;0;5
+Says the treasurers office has saved $37 million in management costs for the oversight of public investments.;0.25;-1;1.25;0;15
+Says Georgia will send more state money per child to state charter schools and that budget cuts are not applied to those charter schools.;0.75;-1;1.75;0;22
+Jorge Elorza wants to impose a municipal income tax.;0;-1;1.0;0;7

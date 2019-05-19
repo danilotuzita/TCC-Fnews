@@ -552,8 +552,8 @@ def isprimentos(path='../experiments/1', treino='treino.csv', ff='firefly.csv', 
         # description.close()
 
 def isprimento1():
-    exp = 'Experimento_3_3_10700'
-    words = 4
+    exp = 'Experimento_1_5_10700'
+    words = 3
 
     db = DB(run_on_ram='experiments/1/' + exp + '/database.sql')
     db.ram = False

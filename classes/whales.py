@@ -17,7 +17,7 @@ import numpy  as np
 import math
 import random
 import os
-import classes.Firefly2
+import classes.Firefly
 
 
 # Function: Initialize Variables
@@ -123,7 +123,7 @@ def target_function(variables_values=[0, 0], dbh=None):
     return brightness_evaluation(variables_values, dbh)
 
 
-def brightness_evaluation(w_firefly, dbh, consider_not_found=0) -> classes.Firefly2.DbHandler:
+def brightness_evaluation(w_firefly, dbh, consider_not_found=0) -> classes.Firefly.DbHandler:
     firefly_dimension = len(w_firefly)
     total_error = 0
     for th in dbh.texts:
@@ -136,17 +136,17 @@ def brightness_evaluation(w_firefly, dbh, consider_not_found=0) -> classes.Firef
                     phrase_prob = consider_not_found
                 else:
                     continue
-            used_clusters[classes.Firefly2.alpha_index(phrase_prob, firefly_dimension)] += 1
+            used_clusters[classes.Firefly.alpha_index(phrase_prob, firefly_dimension)] += 1
 
-        used_clusters = classes.Firefly2.normalize(used_clusters)
-        text_prob = classes.Firefly2.calc_prob(used_clusters, w_firefly)
+        used_clusters = classes.Firefly.normalize(used_clusters)
+        text_prob = classes.Firefly.calc_prob(used_clusters, w_firefly)
         error = abs(th.real_prob - text_prob)
         total_error += error
 
     return total_error / dbh.text_count()
 
 
-dbh1 = classes.Firefly2.DbHandler()
+dbh1 = classes.Firefly.DbHandler()
 dbh1.from_file('../Reports/base_full/testes', 'database_fake_ps.txt')
 
 woa = whale_optimization_algorithm(hunting_party=5, spiral_param=2, min_values=[0, 0, 0, 0, 0],

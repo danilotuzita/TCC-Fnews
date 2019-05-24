@@ -112,7 +112,7 @@ def validation_files_creation(number_of_slices, validation_slice, source_file, o
                 if writer_line_count > (reader_line_count / number_of_slices)*validation_slice or writer_line_count <= (reader_line_count / number_of_slices)*(validation_slice-1):
                     training_tab.writerow([row2[0], row2[1]])
 
-# definir dados lidos pelo main.py (enviando caminho do .csv de treinamento)
+# definir dados lidos pelo main1.py (enviando caminho do .csv de treinamento)
 # ler dados da base alimentada pelo sistema principal
 
 #  construir texto baseado no arquivo de validação
@@ -251,7 +251,7 @@ def validation_train(report_dir, source_name):
 def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     temp  = 1
     # from classes.Firefly import lplFirefly
-    from classes.Firefly2 import firefly
+    from classes.Firefly import firefly
     # etapa de treinamento inicial, naive bayes
 
     # gera nome do relatório original

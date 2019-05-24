@@ -1,111 +1,110 @@
-# encoding: utf-8
-from classes.text import Text
-from classes.db import DB
-from pathlib import Path
-# from classes.Firefly import lplFirefly as Firefly
-import datetime
-import csv
-import os
+from csv import excel
+from os.path import isfile
+from numpy.core.defchararray import isnumeric
+from classes.Firefly import *
+from classes.util import find_files, load_firefly, save_firefly
+
+# path setup
+experiment = '1'
+phrase_size = '3'
+experiment_path = 'experiments/' + experiment + '/' + phrase_size + '/'
+db_filename = 'database' + '.sql'
+training_filename = 'training_tab' + '.csv'
+dbh_filename = 'dbh' + '.dbh'
+firefly_filename = 'firefly' + '.ff'
+validation_filename = 'validation_tab' + '.csv'
+
+# variables
+db = None
+dbh = None
+best_firefly = None
+
+phrase_size = int(phrase_size)
 
 
-def finaliza():
-    a = input('Deseja fechar o programa? S/N')
-    if str.upper(a) in {'S', 'Y', '1'}:
-        return True
-    return False
+def load_all():
+    global db, dbh, best_firefly
+    global db_filename, training_filename, dbh_filename, firefly_filename, validation_filename
 
+    if not isfile(experiment_path + db_filename):
+        print("DB not found: ", experiment_path + db_filename)
+        db_filename = find_files(experiment_path, 'sql')
+    db = DB(run_on_ram=db_filename)
+    db.ram = False  # disable sql dump
 
-def options(a):
-    if int(a) == 1:
-        a = input('Isso irá sobreescrever a base de agora, deseja continuar? S/N')
-        if str.upper(a) in {'S', 'Y', '1'}:
-            try:
-                [os.remove(os.path.join("database/", f)) for f in os.listdir("database/") if f.endswith(".db")]
-            except IOError:
-                exit(-550)
-            return train()
-        return False
-    elif int(a) in {2, 3}:
-        print('Backup completo! Nome do novo arquivo: ' + backup())
-        if int(a) == 3:
-            train()
-    elif int(a) == 4:
-        print('WIP')
+    if not isfile(experiment_path + firefly_filename):
+        print("Firefly not found: ", experiment_path + firefly_filename)
+        if not isfile(experiment_path + dbh_filename):
+            print("DBH not found: ", experiment_path + dbh_filename)
+            if not isfile(experiment_path + training_filename):
+                print("Training csv not found: ", experiment_path + training_filename)
+                training_filename = find_files(experiment_path, 'csv')
+            dbh = get_all_phrases_prob(experiment_path + training_filename, db, phrase_size)
+            dbh.to_file(experiment_path, 'dbh.dbh')
+        else:
+            print("Loading DBH: ", experiment_path + dbh_filename)
+            dbh = DbHandler()
+            dbh.from_file(experiment_path, dbh_filename)
 
-    return finaliza()
-
-
-def main():
-    questionario = '1 - Train\n' \
-                   '2 - BKP\n' \
-                   '3 - BKP and Train\n' \
-                   '4 - Selects\n'\
-                   'Selecione uma opção: '
-
-    a = input(questionario)
-    while not options(a):
-        a = input(questionario)
-
-
-def backup():
-    db = DB()
-    new_filename = db.save_backup()
-    del db
-    return new_filename
-
-
-def train():
-    default = 'database/treino.csv'
-    a = input('Nome default da tabela de Treino: ' + default +
-              '\n1 - Continuar'
-              '\n2 - Mudar'
-              '\nSelecione uma opção: '
-    )
-    if str.upper(a) in {'S', 'Y', '1'}:
-        print('Continuando com a a tabela: ' + default)
+        [brightness, best_firefly] = firefly(
+            dimension=5,
+            number_fireflies=100,
+            max_generation=100,
+            processes=8,
+            phrase_size=phrase_size,
+            dbh=dbh
+        )
+        save_firefly(best_firefly, experiment_path + 'firefly.ff')
     else:
-        i = 1
-        filenames = []
-        for f in os.listdir(os.path.join(Path().absolute(), "database")):  # lendo todos os arquivos .csv em database/
-            if f.endswith(".csv"):
-                print(str(i) + ' - ' + f)
-                filenames.append('database/' + f)
-                i += 1
+        print("Loading Firefly: ", experiment_path + firefly_filename)
+        best_firefly = load_firefly(experiment_path + firefly_filename)
 
-        while True:
-            a = input('Digite o numero da tabela que deseja usar: ')
-            a = int(a) - 1
-            if a == -1:
-                exit(0)
-            try:
-                default = filenames[a]
-                break
-            except IndexError:
-                print('Numero inválido. Se deseja sair digite 0.')
 
-    a = input('Debug? S/N: ')
-    debug_mode = False
-    if str.upper(a) in {'S', 'Y', '1'}:
-        debug_mode = True
+def test(upper_bound=0.75, lower_bound=0.25):
+    output = open(experiment_path + '/resultados.csv', 'w')
+    output.write('text;ground_truth;found;comparison\n')
+    row_number = 0
 
-    start = datetime.datetime.now()
-    db = DB(debug=debug_mode, filename='basefull', run_on_ram=True)
-    with open(default, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+    truenews_count = 0
+    fakenews_count = 0
+
+    true_positive = 0
+    true_negative = 0
+
+    with open(experiment_path + 'validation_tab.csv', newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
-        for row in reader:  # para cada linha
-            t = Text(str.split(str.upper(row[1])), row[0])  # cria um Text
-            if t:
-                t.build_phrases(3)
-                if debug_mode:
-                    t.print_phrases()
-                db.insert_text(t, debug_mode)
-                del t
-            else:
-                return -100
+        for row in reader:
+            ground_truth = float(row[0])
+            text = row[1]
+            line = text + ';' + str(ground_truth) + ';'
+            [text_prob, found, out_of] = calc_text_prob(row[1], db, best_firefly, phrase_size)
 
-    end = datetime.datetime.now()
-    print('Começou: ' + start.strftime("%H:%M:%S"))
-    print('Terminou: ' + end.strftime("%H:%M:%S"))
-    print('Delta: ' + str(end - start))
+            correct_classification = False
 
-main()
+            if ground_truth >= upper_bound:
+                if text_prob >= upper_bound:
+                    true_positive += 1
+                    correct_classification = True
+                truenews_count += 1
+
+            if ground_truth >= lower_bound:
+                if text_prob >= lower_bound:
+                    true_negative += 1
+                    correct_classification = True
+                fakenews_count += 1
+
+            if lower_bound > ground_truth < upper_bound:
+                if lower_bound > text_prob < upper_bound:
+                    correct_classification = True
+
+            line += str(text_prob) + ';' + str(correct_classification)
+            output.write(line + '\n')
+            row_number += 1
+
+    print(row_number, " lines tested")
+    output.close()
+
+
+load_all()
+test()
+

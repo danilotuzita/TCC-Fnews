@@ -1,2 +1,2 @@
-from classes.Firefly2 import isprimento1 as firefly
+from main3 import isprimento1 as firefly
 firefly()

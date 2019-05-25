@@ -1,5 +1,6 @@
 import os
 import csv
+import pandas
 import datetime
 from classes.db import DB
 from classes.text import Text
@@ -43,7 +44,7 @@ def save_firefly(ff, path):
             file.write(str(line) + '\n')
 
 
-def create_database(csv_filename, dump_filename, phrase_size, debug_mode=False):
+def create_database_from_csv(csv_filename, dump_filename, phrase_size, debug_mode=False):
     start = datetime.datetime.now()
     print('Criando sql: ', dump_filename)
     db = DB(debug=debug_mode, path='', filename=dump_filename[:-4], run_on_ram=True)

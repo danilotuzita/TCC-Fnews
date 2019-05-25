@@ -1,19 +1,29 @@
+import pandas
 from os.path import isfile, isdir
 from classes.Firefly import *
-from classes.util import find_files, load_firefly, save_firefly, create_database
+from classes.util import *
 
-# path setup
+# params setup
 _slice = 0
 p_delta = 0
 experiment = '1'
 phrase_size = 2
-db_filename = 'database' + '.sql'
+
+# path setup
 csv_path = ''
+dbh_path = ''
 experiment_path = ''
+
+# filenames setup
 training_filename = 'training_tab' + '.csv'
+validation_filename = 'validation_tab' + '.csv'
+db_filename = 'database' + '.sql'
 dbh_filename = 'training' + '.dbh'
 firefly_filename = 'firefly' + '.ff'
-validation_filename = 'validation_tab' + '.csv'
+
+# files ref
+result_file = None
+result_file_row = 0
 
 # variables
 db = None
@@ -23,40 +33,45 @@ best_firefly = None
 
 def load_all():
     global db, dbh, best_firefly, phrase_size
-    global db_filename, csv_path, experiment_path, training_filename, dbh_filename, firefly_filename, validation_filename
+    global db_filename, training_filename, dbh_filename, firefly_filename, validation_filename
+    global dbh_path, csv_path, experiment_path
 
     experiment_path = 'experiments/' + experiment + '/' + str(_slice) + '/' + str(phrase_size) + '/' + str(p_delta) + '/'
     if not os.path.exists(experiment_path):
         os.makedirs(experiment_path)
 
     csv_path = 'experiments/' + experiment + '/' + str(_slice) + '/'
-    if not isfile(experiment_path + db_filename):
-        print("DB not found: ", experiment_path + db_filename)
-        db = create_database(csv_path + training_filename, experiment_path + db_filename, phrase_size)
+    dbh_path = csv_path + str(phrase_size) + '/'
+    if not isfile(csv_path + training_filename):
+        print("Training csv not found: ", csv_path + training_filename)
+        training_filename = find_files(csv_path, 'csv')
+    print("Training csv: ", csv_path + training_filename)
+
+    if not isfile(dbh_path + db_filename):
+        print("DB not found: ", dbh_path + db_filename)
+        db = create_database_from_csv(csv_path + training_filename, dbh_path + db_filename, phrase_size)
         del db
-    db = DB(run_on_ram=experiment_path + db_filename)
+    print("Loading DB: ", dbh_path + db_filename)
+    db = DB(run_on_ram=dbh_path + db_filename)
     db.ram = False  # disable sql dump
 
     if not isfile(experiment_path + firefly_filename):
         print("Firefly not found: ", experiment_path + firefly_filename)
-        if not isfile(csv_path + dbh_filename):
-            print("DBH not found: ", csv_path + dbh_filename)
-            if not isfile(csv_path + training_filename):
-                print("Training csv not found: ", csv_path + training_filename)
-                training_filename = find_files(csv_path, 'csv')
-            print("Training csv: ", csv_path + training_filename)
+        if not isfile(dbh_path + dbh_filename):
+            print("DBH not found: ", dbh_path + dbh_filename)
             dbh = get_all_phrases_prob(csv_path + training_filename, db, phrase_size)
-            dbh.to_file(csv_path + str(phrase_size) + '/', dbh_filename)
+            dbh.to_file(dbh_path, dbh_filename)
         else:
-            print("Loading DBH: ", csv_path + str(phrase_size) + '/' + dbh_filename)
+            print("Loading DBH: ", dbh_path + dbh_filename)
             dbh = DbHandler()
-            dbh.from_file(csv_path + str(phrase_size) + '/', dbh_filename)
+            dbh.from_file(dbh_path, dbh_filename)
 
+        print("Starting Firefly training")
         [brightness, best_firefly] = firefly(
             dimension=5,
             number_fireflies=100,
             max_generation=10,
-            processes=16,
+            processes=0,
             phrase_size=phrase_size,
             dbh=dbh,
             plot=experiment_path,
@@ -69,13 +84,9 @@ def load_all():
 
 
 def test(ff=0, upper_bound=0.75, lower_bound=0.25):
-    global best_firefly
+    global best_firefly, result_file
     if ff:
         best_firefly = ff
-
-    if isfile(experiment_path + 'resultados.csv'):
-        print("")
-        return
 
     print("Start testing")
     output = open(experiment_path + 'resultados.csv', 'w')
@@ -118,10 +129,8 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
         output.write("True Negative: " + str(fakenews_count) + ", Found: " + str(true_negative) +
                      " (" + str(true_negative * 100 / fakenews_count) + "%)\n")
 
-        output.write("General assertivity: " + str(
-            (true_positive + true_negative) * 100 /
-            (truenews_count + fakenews_count)
-        ) + '\n')
+        assertivity = (true_positive + true_negative) * 100 / (truenews_count + fakenews_count)
+        output.write("General assertivity: " + str(assertivity) + '\n')
 
         output.write(str(row_number) + " lines tested")
         print("============ RESULTS ============")
@@ -136,29 +145,32 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
 
         print("True Negative: " + str(fakenews_count) + ", Found: " + str(true_negative) +
                      " (" + str(true_negative * 100 / fakenews_count) + "%)")
-        print("Assertivity  : ",
-            (true_positive + true_negative) * 100 /
-            (truenews_count + fakenews_count)
-        )
+        print("Assertivity  : ", assertivity)
         print(row_number, " lines tested")
+        result_file.at[result_file_row, 'True News'] = truenews_count
+        result_file.at[result_file_row, 'Fake News'] = fakenews_count
+        result_file.at[result_file_row, 'True Positive'] = true_positive
+        result_file.at[result_file_row, 'True Negative'] = true_negative
+        result_file.at[result_file_row, 'Assertivity'] = assertivity
+        result_file.at[result_file_row, 'Total Text'] = row_number
     output.close()
 
 
 def ex_1():
-    global phrase_size, _slice, p_delta
-    for phrase_s in [3]:
-        phrase_size = phrase_s
-        for s in range(2, 6):
-            _slice = s
-            for p_d in [0, 1, 5]:
-                if s == 2 and p_d in (0, 1):
-                    continue
-                p_delta = p_d
-                load_all()
-                test()
-                if not isfile(csv_path + str(phrase_size) + '/' + "validation.dbh"):
-                    _dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
-                    _dbh.to_file(csv_path + str(phrase_size) + '/', "validation.dbh")
+    global phrase_size, _slice, p_delta, result_file, result_file_row
+    result_file = pandas.read_csv('experiments/1/experiment.csv')
+    for i, row in result_file.iterrows():
+        if pandas.isna(row['True News']):
+            result_file_row = i
+            phrase_size = int(row['Words'])
+            _slice = int(row['Slice'])
+            p_delta = int(row['Plus Delta'])
+            load_all()
+            test()
+            if not isfile(csv_path + str(phrase_size) + '/' + "validation.dbh"):
+                _dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
+                _dbh.to_file(csv_path + str(phrase_size) + '/', "validation.dbh")
+        result_file.to_csv('experiments/1/experiment.csv')
 
 
 ex_1()

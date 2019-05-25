@@ -120,11 +120,23 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
         ) + '\n')
 
         output.write(str(row_number) + " lines tested")
-        print(
+        print("============ RESULTS ============")
+        print("Experiment : ", experiment)
+        print("Slice      : ", _slice)
+        print("Phrase Size: ", phrase_size)
+        print("Plus Delta : ", p_delta)
+        print("Upper Bound: ", upper_bound)
+        print("Lower Bound: ", lower_bound)
+        print("True Positive: " + str(truenews_count) + ", Found: " + str(true_positive) +
+                     " (" + str(true_positive * 100 / truenews_count) + "%)\n")
+
+        print("True Negative: " + str(fakenews_count) + ", Found: " + str(true_negative) +
+                     " (" + str(true_negative * 100 / fakenews_count) + "%)\n")
+        print("Assertivity  : ",
             (true_positive + true_negative) * 100 /
             (truenews_count + fakenews_count)
         )
-    print(row_number, " lines tested")
+        print(row_number, " lines tested")
     output.close()
 
 
@@ -132,7 +144,7 @@ def ex_1():
     global phrase_size, _slice, p_delta
     for phrase_s in [3]:
         phrase_size = phrase_s
-        for s in range(5):
+        for s in range(1, 6):
             _slice = s
             for p_d in [0, 1, 5]:
                 p_delta = p_d
@@ -144,6 +156,12 @@ def ex_1():
 
 
 ex_1()
+
+# from classes.validation import validation_files_creation
+
+# for i in range(1, 6):
+#     validation_files_creation(5, i, 'experiments/cross validation files/10700/LIAR_1_10700.csv',
+#                               'experiments/cross validation files/10700/' + str(i))
 
 
 

@@ -1,10 +1,10 @@
-from os.path import isfile
+from os.path import isfile, isdir
 from classes.Firefly import *
 from classes.util import find_files, load_firefly, save_firefly, create_database
 
 # path setup
 _slice = 0
-var = 0
+p_delta = 0
 experiment = '1'
 phrase_size = 2
 db_filename = 'database' + '.sql'
@@ -25,7 +25,10 @@ def load_all():
     global db, dbh, best_firefly, phrase_size
     global db_filename, csv_path, experiment_path, training_filename, dbh_filename, firefly_filename, validation_filename
 
-    experiment_path = 'experiments/' + experiment + '/' + str(_slice) + '/' + str(phrase_size) + '/'
+    experiment_path = 'experiments/' + experiment + '/' + str(_slice) + '/' + str(phrase_size) + '/' + str(p_delta) + '/'
+    if not os.path.exists(experiment_path):
+        os.makedirs(experiment_path)
+
     csv_path = 'experiments/' + experiment + '/' + str(_slice) + '/'
     if not isfile(experiment_path + db_filename):
         print("DB not found: ", experiment_path + db_filename)
@@ -56,7 +59,8 @@ def load_all():
             processes=16,
             phrase_size=phrase_size,
             dbh=dbh,
-            plot=experiment_path
+            plot=experiment_path,
+            plus_delta=p_delta
         )
         save_firefly(best_firefly, experiment_path + 'firefly.ff')
     else:
@@ -125,16 +129,22 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
 
 
 def ex_1():
-    for phrase_s in [3, 2]:
+    global phrase_size, _slice, p_delta
+    for phrase_s in [3]:
         phrase_size = phrase_s
         for s in range(5):
             _slice = s
-            load_all()
-            test()
+            for p_d in [0, 1, 5]:
+                p_delta = p_d
+                load_all()
+                test()
+                if not isfile(experiment_path + "validation.dbh"):
+                    _dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
+                    _dbh.to_file(experiment_path, "validation.dbh")
 
-            if not isfile(experiment_path + "validation.dbh"):
-                dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
-                dbh.to_file(experiment_path, "validation.dbh")
+
+ex_1()
+
 
 
 """

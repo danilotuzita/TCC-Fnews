@@ -247,12 +247,13 @@ def validation_text_comparison_TB(data_validation_source, report_flag, training_
                         FAKES = 0
                         TOTAL = 0
                         p_prob = 0
+                        none = True
                         for p in t.phrases:
                             FAKES = DB_V.get_phrase_prob_count(p, 0)+DB_V.get_phrase_prob_count(p, 0.25)+DB_V.get_phrase_prob_count(p, 0.5)+DB_V.get_phrase_prob_count(p, 0.75)
                             TOTAL = DB_V.get_all_phrase_prob(p)
-                            if TOTAL > 0:
+                            if TOTAL > 0 and FAKES > 0:
                                 p_prob = FAKES/TOTAL
-                                classificated += 1
+                                none = False
                             print("Palavra: " + (p.words[0].value.encode('ascii', 'ignore')).decode('utf-8'))
                             print("Palavra: " + (p.words[1].value.encode('ascii', 'ignore')).decode('utf-8'))
                             print("Palavra: " + (p.words[2].value.encode('ascii', 'ignore')).decode('utf-8'))
@@ -279,6 +280,8 @@ def validation_text_comparison_TB(data_validation_source, report_flag, training_
                         else:
                             FN += 1
                             print("FN")
+                        if none != True:
+                            classificated += 1
                         del t
                 print("Numero de frases:    " + str(sentence_counter))
                 print("Erro positivo:   " + str(positive_error))

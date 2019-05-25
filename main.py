@@ -39,18 +39,18 @@ def load_all():
 
     if not isfile(experiment_path + firefly_filename):
         print("Firefly not found: ", experiment_path + firefly_filename)
-        if not isfile(experiment_path + dbh_filename):
-            print("DBH not found: ", experiment_path + dbh_filename)
+        if not isfile(csv_path + dbh_filename):
+            print("DBH not found: ", csv_path + dbh_filename)
             if not isfile(csv_path + training_filename):
                 print("Training csv not found: ", csv_path + training_filename)
-                training_filename = find_files(experiment_path, 'csv')
+                training_filename = find_files(csv_path, 'csv')
             print("Training csv: ", csv_path + training_filename)
             dbh = get_all_phrases_prob(csv_path + training_filename, db, phrase_size)
-            dbh.to_file(experiment_path, 'dbh.dbh')
+            dbh.to_file(csv_path, dbh_filename)
         else:
-            print("Loading DBH: ", experiment_path + dbh_filename)
+            print("Loading DBH: ", csv_path + dbh_filename)
             dbh = DbHandler()
-            dbh.from_file(experiment_path, dbh_filename)
+            dbh.from_file(csv_path, dbh_filename)
 
         [brightness, best_firefly] = firefly(
             dimension=5,
@@ -128,10 +128,10 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
         print("Upper Bound: ", upper_bound)
         print("Lower Bound: ", lower_bound)
         print("True Positive: " + str(truenews_count) + ", Found: " + str(true_positive) +
-                     " (" + str(true_positive * 100 / truenews_count) + "%)\n")
+                     " (" + str(true_positive * 100 / truenews_count) + "%)")
 
         print("True Negative: " + str(fakenews_count) + ", Found: " + str(true_negative) +
-                     " (" + str(true_negative * 100 / fakenews_count) + "%)\n")
+                     " (" + str(true_negative * 100 / fakenews_count) + "%)")
         print("Assertivity  : ",
             (true_positive + true_negative) * 100 /
             (truenews_count + fakenews_count)
@@ -144,15 +144,17 @@ def ex_1():
     global phrase_size, _slice, p_delta
     for phrase_s in [3]:
         phrase_size = phrase_s
-        for s in range(1, 6):
+        for s in range(2, 6):
             _slice = s
             for p_d in [0, 1, 5]:
+                if s == 2 and p_d in (0, 1):
+                    continue
                 p_delta = p_d
                 load_all()
                 test()
-                if not isfile(experiment_path + "validation.dbh"):
+                if not isfile(csv_path + "validation.dbh"):
                     _dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
-                    _dbh.to_file(experiment_path, "validation.dbh")
+                    _dbh.to_file(csv_path, "validation.dbh")
 
 
 ex_1()

@@ -3,9 +3,12 @@ from classes.Firefly import *
 from classes.util import find_files, load_firefly, save_firefly, create_database
 
 # path setup
-experiment = '3'
+_slice = 0
+var = 0
+experiment = '1'
 phrase_size = 2
 db_filename = 'database' + '.sql'
+csv_path = ''
 experiment_path = ''
 training_filename = 'training_tab' + '.csv'
 dbh_filename = 'training' + '.dbh'
@@ -20,12 +23,13 @@ best_firefly = None
 
 def load_all():
     global db, dbh, best_firefly, phrase_size
-    global db_filename, experiment_path, training_filename, dbh_filename, firefly_filename, validation_filename
+    global db_filename, csv_path, experiment_path, training_filename, dbh_filename, firefly_filename, validation_filename
 
-    experiment_path = 'experiments/' + experiment + '/' + str(phrase_size) + '/'
+    experiment_path = 'experiments/' + experiment + '/' + str(_slice) + '/' + str(phrase_size) + '/'
+    csv_path = 'experiments/' + experiment + '/' + str(_slice) + '/'
     if not isfile(experiment_path + db_filename):
         print("DB not found: ", experiment_path + db_filename)
-        db = create_database(experiment_path + training_filename, experiment_path + db_filename, phrase_size)
+        db = create_database(csv_path + training_filename, experiment_path + db_filename, phrase_size)
         del db
     db = DB(run_on_ram=experiment_path + db_filename)
     db.ram = False  # disable sql dump
@@ -34,11 +38,11 @@ def load_all():
         print("Firefly not found: ", experiment_path + firefly_filename)
         if not isfile(experiment_path + dbh_filename):
             print("DBH not found: ", experiment_path + dbh_filename)
-            if not isfile(experiment_path + training_filename):
-                print("Training csv not found: ", experiment_path + training_filename)
+            if not isfile(csv_path + training_filename):
+                print("Training csv not found: ", csv_path + training_filename)
                 training_filename = find_files(experiment_path, 'csv')
-            print("Training csv: ", experiment_path + training_filename)
-            dbh = get_all_phrases_prob(experiment_path + training_filename, db, phrase_size)
+            print("Training csv: ", csv_path + training_filename)
+            dbh = get_all_phrases_prob(csv_path + training_filename, db, phrase_size)
             dbh.to_file(experiment_path, 'dbh.dbh')
         else:
             print("Loading DBH: ", experiment_path + dbh_filename)
@@ -76,19 +80,9 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
     true_positive = 0
     true_negative = 0
 
-    with open(experiment_path + validation_filename, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
+    with open(csv_path + validation_filename, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
         for i, row in enumerate(reader):
-            # t = Text(str.split(str.upper(row[1])), 0)
-            # t.build_phrases(phrase_size)
-            #
-            # phrase_prob = []
-            #
-            # for phrase in t.phrases:
-            #     phrase_prob.append(database.get_phrase_prob(phrase))
-            # continue
-
-            # print("Feafaea")
             if not divmod(i, 10)[1]:
                 print(i)
 
@@ -96,8 +90,6 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
             text = row[1]
             line = text + ';' + str(ground_truth) + ';'
             [text_prob, found, out_of] = calc_text_prob(row[1], db, best_firefly, phrase_size)
-
-            correct_classification = False
 
             if ground_truth >= upper_bound:
                 if text_prob >= upper_bound:
@@ -132,14 +124,18 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
     output.close()
 
 
-for phrase_s in [3, 2]:
-    phrase_size = phrase_s
-    load_all()
-    test()
+def ex_1():
+    for phrase_s in [3, 2]:
+        phrase_size = phrase_s
+        for s in range(5):
+            _slice = s
+            load_all()
+            test()
 
-    if not isfile(experiment_path + "validation.dbh"):
-        dbh = get_all_phrases_prob(experiment_path + validation_filename, db, phrase_size)
-        dbh.to_file(experiment_path, "validation.dbh")
+            if not isfile(experiment_path + "validation.dbh"):
+                dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
+                dbh.to_file(experiment_path, "validation.dbh")
+
 
 """
 ff = np.array([0.28126, 0.26142, 0.0035938, 0.39035, 0.063372]) + 1

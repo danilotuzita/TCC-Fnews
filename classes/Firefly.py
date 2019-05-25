@@ -258,13 +258,13 @@ def normalize(array) -> np.ndarray:
 
 
 # Generates a random normalized fireflies position
-def init_ff(n, d):
-    return np.random.rand(n, d) + 1
+def init_ff(n, d, plus_delta):
+    return np.random.rand(n, d) + plus_delta
 
 
 def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, max_generation=100, dbh=None,
-            processes=0, phrase_size=3, plot=False):
-    """"
+            processes=0, phrase_size=3, plot=False, plus_delta=0):
+    """
     :param dimension: dimension of the fireflies
     :param number_fireflies: number of agents
     :param alpha: step of motion
@@ -275,11 +275,12 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
     :param processes: number of threads
     :param phrase_size: number of words in a phrase
     :param plot: Print and save firefly
+    :param plus_delta: firefly rand() + plus_delta
     """
     original_alpha = alpha
     best_firefly = np.zeros(dimension)  # will return this guy right here
     random.seed(datetime.now())  # Reset the random generator
-    w_fireflies = init_ff(number_fireflies, dimension)  # Generate the 'physical' fireflies (their alpha powers)
+    w_fireflies = init_ff(number_fireflies, dimension, plus_delta)  # Generate the fireflies (their alpha powers)
     distances = np.zeros((number_fireflies, number_fireflies))  # Distance matrix
     brightness = np.zeros(number_fireflies)  # Brightness Array
 

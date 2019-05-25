@@ -108,4 +108,5 @@ def train():
     print('Terminou: ' + end.strftime("%H:%M:%S"))
     print('Delta: ' + str(end - start))
 
+
 main()

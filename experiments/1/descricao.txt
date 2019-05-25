@@ -1,0 +1,7 @@
+[firefly]
+gerações: 50
+alfa_power: rand + 10
+
+[classificação]
+upper bound: 0.75
+lower bound: 0.25

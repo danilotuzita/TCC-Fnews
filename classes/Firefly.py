@@ -99,6 +99,8 @@ def alpha_index(prob, dimension):
 def get_all_phrases_prob(data_validation_source, db: DB, phrase_size):
     dbh = DbHandler()
 
+    print("Phrase count: ", db.query("select count(*) from phrases;"))
+
     with open(data_validation_source, encoding='utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
@@ -121,16 +123,10 @@ def get_all_phrases_prob(data_validation_source, db: DB, phrase_size):
         return dbh
 
 
-# Calculates the probability of a text
-def calc_text_prob(text="", database=None, w_firefly=(1, 1, 1, 1, 1), phrase_size=3, consider_not_found=0):
-    firefly_dimension = len(w_firefly)
-    used_clusters = np.zeros(firefly_dimension)
-    t = Text(str.split(str.upper(text)), 0)
-    t.build_phrases(phrase_size)
+def get_used_clusters(phrase_probs, firefly_dimension, consider_not_found=0):
     not_found = 0
-
-    for phrase in t.phrases:
-        phrase_prob = database.get_phrase_prob(phrase)
+    used_clusters = np.zeros(firefly_dimension)
+    for phrase_prob in phrase_probs:
         if phrase_prob == -1:
             not_found += 1
             if consider_not_found:
@@ -139,9 +135,25 @@ def calc_text_prob(text="", database=None, w_firefly=(1, 1, 1, 1, 1), phrase_siz
                 continue
         used_clusters[alpha_index(phrase_prob, firefly_dimension)] += 1
 
+    return [normalize(used_clusters), not_found]
+
+
+# Calculates the probability of a text
+def calc_text_prob(text="", database=None, w_firefly=(1, 1, 1, 1, 1), phrase_size=3, consider_not_found=0):
+    firefly_dimension = len(w_firefly)
+    t = Text(str.split(str.upper(text)), 0)
+    t.build_phrases(phrase_size)
+
+    phrase_prob = []
+
+    for phrase in t.phrases:
+        phrase_prob.append(database.get_phrase_prob(phrase))
+
+    [used_clusters, not_found] = get_used_clusters(phrase_prob, firefly_dimension, consider_not_found)
+
     used_clusters = normalize(used_clusters)
     if not len(t.phrases):
-        return -1
+        return [-1, 0, 0]
 
     found_ratio = 1 - (not_found / len(t.phrases))
     # print("Found: ", len(t.phrases) - not_found, " of ", len(t.phrases), " | ", found_ratio)
@@ -151,7 +163,7 @@ def calc_text_prob(text="", database=None, w_firefly=(1, 1, 1, 1, 1), phrase_siz
         return [-1, 0, len(t.phrases)]
 
 
-# Bayesian probablity calculator
+# Bayesian probability calculator
 def calc_prob(used_clusters=(0, 0, 0), w_firefly=(1, 1, 1)):
     firefly_dimension = len(w_firefly)
     if firefly_dimension != len(used_clusters):
@@ -217,10 +229,10 @@ def move_fireflies(w_fireflies, brightness, distance, alpha, gamma):
                             beta * w_fireflies[j][k] + \
                             interference[k]
 
-    return normalize(w_fireflies)
+    return w_fireflies
 
 
-# Get euclidian distance of two points
+# Get euclidean distance of two points
 def dist(a, b):
     s = 0
     for k in range(len(a)):
@@ -247,7 +259,7 @@ def normalize(array) -> np.ndarray:
 
 # Generates a random normalized fireflies position
 def init_ff(n, d):
-    return normalize(np.random.rand(n, d))
+    return np.random.rand(n, d) + 1
 
 
 def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, max_generation=100, dbh=None,
@@ -297,11 +309,11 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
         best_firefly = w_fireflies[0]  # storing the best firefly of generation
         best_brightness.append(1 - brightness[0])
 
-        print("GENERATION " + str(i).zfill(3) + ": " + str(best_firefly))
-        print("Best Brightness: " + str(brightness[0]))
+        print("GENERATION " + str(i).zfill(3) + ":   " + str(best_firefly))
+        print("Best Brightness:  " + str(brightness[0]))
         print("Worst Brightness: " + str(brightness[-1]))
-        print("Most Bright FF: " + str(index[0]))
-        print('Processing Time: ' + str(datetime.now() - start))
+        print("Most Bright FF:   " + str(index[0]))
+        print("Processing Time:  " + str(datetime.now() - start))
         print("====")
 
         # loops through upper triangular matrix without its diagonal
@@ -325,9 +337,12 @@ def firefly(dimension, number_fireflies=100, alpha=0.8, gamma=0.5, delta=0.95, m
         )
         plot = str(plot)
         if os.path.isdir(plot):
-            filename = 'firefly' + str(phrase_size) + \
+            filename = str(phrase_size) + \
                 datetime.now().strftime("%Y%m%d_%H%M%S") + '-' + str(max_generation) + '-' + \
                 str(original_alpha) + '_' + str(gamma) + '_' + str(delta) + '.png'
+            file = open(plot + filename[:-4] + '.txt', 'w')
+            file.write('\n'.join(map(str, best_brightness)))
+            file.close()
             plt.savefig(plot + filename)
         plt.show()
         plt.clf()

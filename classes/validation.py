@@ -11,7 +11,7 @@ import random
 import datetime
 import sys
 import os
-
+import math
 
 class AlfaCluster:
     # inicializa array de alfas por cluster com o numero de alfas e o array
@@ -21,7 +21,7 @@ class AlfaCluster:
 
     # retorna o valor alfa para uma dada probabilidade
     def getalfa(self, prob):
-        return prob / (1/self.n)
+        return math.floor((prob+0.99 - abs(prob-0.99)/2)*self.n)
 
     def getalfaS(self, index):
         if 0 <= index < self.n:
@@ -212,6 +212,94 @@ def validation_text_comparison(data_validation_source, report_flag, training_fil
                     del t
     return 1-(positive_error+abs(negative_error))/sentence_counter #retorna o erro mais 0.000001 para evitar divisão por 0
 
+def validation_text_comparison_TB(data_validation_source, report_flag, training_file, report_name, error_threshold, alfas, database):
+    DB_V = DB(database + "/", "database", debug=False, run_on_ram=database+"/database.sql")
+    print(database)
+    now = datetime.datetime.now()
+    positive_error = 0 #erro positivo
+    negative_error = 0 #erro negativo
+    positive_error_c = 0 #contagem de erro positivo
+    negative_error_c = 0 #contagem de erro negativo
+    sentence_counter = 0 #contagem de frases
+    TP = 0
+    TN = 0
+    FP = 0
+    FN = 0
+    classificated = 0
+    with open(data_validation_source,  encoding='utf-8-sig') as csv_file:  # conta a quantidade de linhas no arquivo original
+        csv_reader = csv.reader(csv_file, delimiter=';')
+
+        if report_flag: #caso a flag de relatório esteja ativada
+            with open("../reports/" + report_name + "/report.out", "w") as report: #abre arquivo de relatório
+                orig_stdout = sys.stdout # guarda saida padrão
+                sys.stdout = report # troca saida padrão por relatório
+                print("Data:    (DD/MM/AAAA)" + str(now.day) + "/" + str(now.month) + "/" + str(now.year))
+                print("Hora:    (HH:MM:SS)" + str(now.hour) + ":" + str(now.minute) + ":" + str(now.second))
+                print("Training_File:   " + training_file)
+                print("Validation_File: " + data_validation_source)
+                for row in csv_reader:
+                    sentence_counter += 1
+                    t = Text(str.split(str.upper(row[1])), row[0])
+                    if t:
+                        t.build_phrases(3) #construir frases
+                        first = 0
+                        prob = 1
+                        FAKES = 0
+                        TOTAL = 0
+                        p_prob = 0
+                        for p in t.phrases:
+                            FAKES = DB_V.get_phrase_prob_count(p, 0)+DB_V.get_phrase_prob_count(p, 0.25)+DB_V.get_phrase_prob_count(p, 0.5)+DB_V.get_phrase_prob_count(p, 0.75)
+                            TOTAL = DB_V.get_all_phrase_prob(p)
+                            if TOTAL > 0:
+                                p_prob = FAKES/TOTAL
+                                classificated += 1
+                            print("Palavra: " + (p.words[0].value.encode('ascii', 'ignore')).decode('utf-8'))
+                            print("Palavra: " + (p.words[1].value.encode('ascii', 'ignore')).decode('utf-8'))
+                            print("Palavra: " + (p.words[2].value.encode('ascii', 'ignore')).decode('utf-8'))
+                            print("Probabilidade: " + str(p_prob))
+                            temp_alfa = alfas.getalfa(p_prob)
+                            print("Alfa: " + str(temp_alfa))
+                            print("FAKES:   " + str(FAKES))
+                            print("TOTAL:   " + str(TOTAL))
+                            prob = prob * (1-p_prob)**temp_alfa # busca a probabilidade associada à frase e calcula probabilidade do texto
+                        prob = 1 - prob
+                        print(row) #imprime texto
+                        print("Probabilidade do texto:  " + str(t.probability)) #imprime probabilidade do texto
+                        print("Probabilidade calculada: " + str(prob)) #imprime probabilidade calculada
+                        error = float(t.probability) - prob;
+                        if prob >= 0.5 and float(t.probability) < 1:
+                            TP += 1
+                            print("TP")
+                        elif prob < 0.5 and float(t.probability) == 1:
+                            TN += 1
+                            print("TN")
+                        elif prob >= 0.5:
+                            FP += 1
+                            print("FP")
+                        else:
+                            FN += 1
+                            print("FN")
+                        del t
+                print("Numero de frases:    " + str(sentence_counter))
+                print("Erro positivo:   " + str(positive_error))
+                print("Erro negativo:   " + str(negative_error))
+                print("Erro total:      " + str(positive_error + abs(negative_error)))
+                print("Contagem de Erros Positivos:     " + str(positive_error_c))
+                print("Contagem de Erros Negativos:     " + str(negative_error_c))
+                print("TP:  " + str(TP))
+                print("TN:  " + str(TN))
+                print("FP:  " + str(FP))
+                print("FN:  " + str(FN))
+                print("(TP+FN)/TOTAL:   " + str((TP+TN)/sentence_counter))
+                print("(TP+FN)/CLASSIFICATED:   " + str((TP + TN) / classificated))
+            sys.stdout = orig_stdout    # reseta saída
+            report.close()  #fechar arquivo de relatório
+
+
+    return TP+TN/sentence_counter #retorna o erro mais 0.000001 para evitar divisão por 0
+
+
+
 
 def validation_generate_reportname(appendix = ""):
     now = datetime.datetime.now()
@@ -255,9 +343,10 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
     # etapa de treinamento inicial, naive bayes
 
     # gera nome do relatório original
-    report_name_o = validation_generate_reportname()
+    #report_name_o = validation_generate_reportname()
+    report_name_o = "../Reports/report225201972950"
     # gera nome do relatorio fonte
-    validation_report_directory(report_dir + report_name_o)
+    #validation_report_directory(report_dir + report_name_o)
     best = 3.14  # declara melhor resultado de brilho
     best_slice = 0
     ALFAS = AlfaCluster(n_alfas, alfa_arr)
@@ -268,22 +357,21 @@ def main_validation(source, report_dir, slice_number, n_alfas, alfa_arr):
         # gera nome do relatório para a parte do conjunto cross validation
         report_name = report_name_o + "_" + str(slice)
         print(report_name)
-
         # cria diretório do relatório
-        validation_report_directory(report_dir + report_name)
+        #validation_report_directory(report_dir + report_name)
 
         # cria arquivos divididos de validação / treinamento
         print("Cria arquivos de validação")
-        validation_files_creation(slice_number, slice, source, report_dir + report_name)
+        #validation_files_creation(slice_number, slice, source, report_dir + report_name)
 
         # treinamento
         print("Treino")
-        validation_train(report_dir + report_name,report_dir + report_name + '/training_tab.csv')
+        #validation_train(report_dir + report_name,report_dir + report_name + '/training_tab.csv')
         print("Fim treino")
 
         # validacao
         print("Validacao")
-        temp = validation_text_comparison(report_dir + report_name + '/validation_tab.csv', True, report_dir + report_name + '/training_tab.csv', report_name, 0.05, ALFAS, report_dir + report_name) #validação
+        temp = validation_text_comparison_TB(report_dir + report_name + '/validation_tab.csv', True, report_dir + report_name + '/training_tab.csv', report_name, 0.05, ALFAS, report_dir + report_name) #validação
         print("Fim validacao")
 
         # caso seja primeira fatia
@@ -322,7 +410,7 @@ if __name__ == "__main__":
     # base a ser lida, pasta de relatorios, numero de secoes para validacao, numero de alfas e array de alfas ==============
     print("Inicio")
     # x = input()
-    main_validation('../database/LIAR_1_10700.csv', "../reports/", 1, 5, [1, 1, 1, 1, 1])
+    main_validation('../database/LIAR_1_10700.csv', "../reports/", 5, 5, [1, 1, 1, 1, 1])
 
 
 # ================= anotações ===========================

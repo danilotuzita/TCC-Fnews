@@ -279,7 +279,10 @@ class DB:
             )
         return -1
 
-    def get_all_phrase_prob(self, phrase):
+    def get_all_phrase_prob(self, phrase, default_return=-1):
+        pid = self.get_phrase_id(phrase)
+        if not pid:
+            return default_return
         """"
         retorna a quantidade de vezes que a frase phrase teve certa probabilidade
         SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB WHERE PHRASE_ID = phrase
@@ -290,12 +293,15 @@ class DB:
             phrase = self.get_phrase_id(phrase)
 
         return self.query(
-            'SELECT PHRASE_ID, PROBABILITY, COUNT(*) FROM PHRASES_PROB '
+            'SELECT COUNT(*) FROM PHRASES_PROB '
             'WHERE PHRASE_ID = ' + str(phrase) +
-            ' GROUP BY PHRASE_ID, PROBABILITY;'
+            ';'
         )
 
-    def get_phrase_prob_count(self, phrase, prob):
+    def get_phrase_prob_count(self, phrase, prob,default_return= -1):
+        pid = self.get_phrase_id(phrase)
+        if not pid:
+            return default_return
         """"
         retorna a quantidade de vezes que a frase phrase teve probabilidade prob
         SELECT COUNT(*) FROM PHRASES_PROB WHERE PHRASE_ID = phrase AND PROBABILITY = prob;
@@ -311,7 +317,9 @@ class DB:
             ' AND PROBABILITY = ' + str(prob) + ';'
         )
 
-    def get_phrases_with_prob(self, prob):
+    def get_phrases_with_prob(self, prob, default_return = -1):
+
+
         """"
         retorna as frases e sua quantidade de vezes que teve probabilidade prob
         SELECT PHRASE_ID, COUNT(*) FROM PHRASES_PROB WHERE PROBABILITY = prob

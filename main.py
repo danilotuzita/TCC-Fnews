@@ -46,11 +46,11 @@ def load_all():
                 training_filename = find_files(csv_path, 'csv')
             print("Training csv: ", csv_path + training_filename)
             dbh = get_all_phrases_prob(csv_path + training_filename, db, phrase_size)
-            dbh.to_file(csv_path, dbh_filename)
+            dbh.to_file(csv_path + str(phrase_size) + '/', dbh_filename)
         else:
-            print("Loading DBH: ", csv_path + dbh_filename)
+            print("Loading DBH: ", csv_path + str(phrase_size) + '/' + dbh_filename)
             dbh = DbHandler()
-            dbh.from_file(csv_path, dbh_filename)
+            dbh.from_file(csv_path + str(phrase_size) + '/', dbh_filename)
 
         [brightness, best_firefly] = firefly(
             dimension=5,
@@ -152,9 +152,9 @@ def ex_1():
                 p_delta = p_d
                 load_all()
                 test()
-                if not isfile(csv_path + "validation.dbh"):
+                if not isfile(csv_path + str(phrase_size) + '/' + "validation.dbh"):
                     _dbh = get_all_phrases_prob(csv_path + validation_filename, db, phrase_size)
-                    _dbh.to_file(csv_path, "validation.dbh")
+                    _dbh.to_file(csv_path + str(phrase_size) + '/', "validation.dbh")
 
 
 ex_1()

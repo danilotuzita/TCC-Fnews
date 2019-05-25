@@ -73,6 +73,10 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
     if ff:
         best_firefly = ff
 
+    if isfile(experiment_path + 'resultados.csv'):
+        print("")
+        return
+
     print("Start testing")
     output = open(experiment_path + 'resultados.csv', 'w')
     output.write('text;ground_truth;found;phrases_found;out_of\n')

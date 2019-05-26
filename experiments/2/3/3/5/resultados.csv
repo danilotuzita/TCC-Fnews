@@ -2053,7 +2053,7 @@ The rate of uninsured Americans is 8.8 percent;0.5;1.0;1;6
 Since the salary for state lawmakers was raised to $79500 that purchasing power has now been reduced to $53000;0.75;0.0;1;17
 Distracted driving such as texting behind the wheel is behind a rise in traffic deaths on Georgia roadways this year;1.0;-1;0;18
 Says that in the recent year homeowners across Ohio have signed mineral rights agreements and I understand that over a billion dollars worth of leases have been signed to date;1.0;0.8321434368412871;4;28
-True Positive: 727, Found: 385 (52.95735900962861%)
-True Negative: 878, Found: 525 (59.79498861047836%)
-General assertivity: 56.69781931464174
+True Positive: 727, Found: 390 (53.645116918844565%)
+True Negative: 878, Found: 527 (60.02277904328018%)
+General assertivity: 57.13395638629284
 2054 lines tested

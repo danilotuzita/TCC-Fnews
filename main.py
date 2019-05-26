@@ -184,7 +184,7 @@ def ex_1():
 def ex_2():
     global phrase_size, _slice, p_delta, result_file, result_file_row, bound, experiment
     experiment = '2'
-    result_filename = 'experiment2.csv'
+    result_filename = 'experiment_2.csv'
     result_file = pandas.read_csv('experiments/' + experiment + '/' + result_filename)
     for i, row in result_file.iterrows():
         if pandas.isna(row['True News']):
@@ -207,4 +207,30 @@ def ex_2():
         result_file.to_csv('experiments/' + experiment + '/' + result_filename)
 
 
-ex_2()
+def ex_3():
+    global phrase_size, _slice, p_delta, result_file, result_file_row, bound, experiment
+    experiment = '3'
+    result_filename = 'experiment_3.csv'
+    result_file = pandas.read_csv('experiments/' + experiment + '/' + result_filename)
+    for i, row in result_file.iterrows():
+        if pandas.isna(row['True News']):
+            result_file_row = i
+            phrase_size = int(row['Words'])
+            _slice = row['1/n'] + '/' + row['Slice']
+            p_delta = int(row['Plus Delta'])
+            bound = float(row['1/n'])
+            print(
+                "Slice      : ", _slice, '\n'
+                "Phrase Size: ", phrase_size, '\n'
+                "Plus Delta : ", p_delta, '\n'
+                "Bounds     : ", bound
+            )
+            load_all()
+            test(
+                upper_bound=0.5 + bound,
+                lower_bound=0.5 - bound
+            )
+        result_file.to_csv('experiments/' + experiment + '/' + result_filename)
+
+
+ex_3()

@@ -2052,7 +2052,7 @@ An economic impact study found that for every $1 invested in pre-K in Pennsylvan
 Last year it was discovered that Rhode Islands public employees ranked 4th in average pay while the private sector ranked 23rd;0.5;1.0;1;19
 Says Will Hurd said a border-long U.S.-Mexico wall absolutely makes sense;0.25;1.0;1;9
 Says state workers have not had across-the-board raises in six years;1.0;0.0;2;9
-True Positive: 749, Found: 402 (53.67156208277704%)
-True Negative: 911, Found: 586 (64.32491767288694%)
-General assertivity: 59.51807228915663
+True Positive: 749, Found: 404 (53.938584779706275%)
+True Negative: 911, Found: 588 (64.54445664105378%)
+General assertivity: 59.75903614457831
 2053 lines tested

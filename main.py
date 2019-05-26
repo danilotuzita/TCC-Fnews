@@ -216,20 +216,15 @@ def ex_3():
         if pandas.isna(row['True News']):
             result_file_row = i
             phrase_size = int(row['Words'])
-            _slice = row['1/n'] + '/' + row['Slice']
+            _slice = str(row['1/n']) + '/' + str(row['Slice'])
             p_delta = int(row['Plus Delta'])
-            bound = float(row['1/n'])
             print(
                 "Slice      : ", _slice, '\n'
                 "Phrase Size: ", phrase_size, '\n'
                 "Plus Delta : ", p_delta, '\n'
-                "Bounds     : ", bound
             )
             load_all()
-            test(
-                upper_bound=0.5 + bound,
-                lower_bound=0.5 - bound
-            )
+            test()
         result_file.to_csv('experiments/' + experiment + '/' + result_filename)
 
 

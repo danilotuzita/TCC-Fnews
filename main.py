@@ -103,7 +103,7 @@ def test(ff=0, upper_bound=0.75, lower_bound=0.25):
     with open(csv_path + validation_filename, newline='', encoding='utf-8-sig') as csvfile:  # lendo o csv
         reader = csv.reader(csvfile, delimiter=";", quoting=csv.QUOTE_NONE)
         for i, row in enumerate(reader):
-            if not divmod(i, 10)[1]:
+            if not divmod(i, 100)[1]:
                 print(i)
 
             ground_truth = float(row[0])
@@ -184,7 +184,7 @@ def ex_1():
 def ex_2():
     global phrase_size, _slice, p_delta, result_file, result_file_row, bound, experiment
     experiment = '2'
-    result_filename = 'experiment.csv'
+    result_filename = 'experiment2.csv'
     result_file = pandas.read_csv('experiments/' + experiment + '/' + result_filename)
     for i, row in result_file.iterrows():
         if pandas.isna(row['True News']):
@@ -207,4 +207,4 @@ def ex_2():
         result_file.to_csv('experiments/' + experiment + '/' + result_filename)
 
 
-ex_1()
+ex_2()

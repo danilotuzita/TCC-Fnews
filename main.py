@@ -71,7 +71,7 @@ def load_all():
         [brightness, best_firefly] = firefly(
             dimension=5,
             number_fireflies=100,
-            max_generation=10,
+            max_generation=100,
             processes=0,
             phrase_size=phrase_size,
             dbh=dbh,
@@ -228,4 +228,23 @@ def ex_3():
         result_file.to_csv('experiments/' + experiment + '/' + result_filename)
 
 
-ex_3()
+def apresentacao_tcc():
+    global _slice, p_delta, best_firefly, db, experiment, phrase_size
+    experiment = '99'
+    phrase_size = 3
+    _slice = '1'
+    p_delta = 5
+    load_all()
+
+    while True:
+        text = input("Texto: ")
+        [prob, found, out_of] = calc_text_prob(
+                text=text,
+                database=db,
+                w_firefly=best_firefly,
+                phrase_size=phrase_size
+            )
+        print("Probabilidade Calculada(", found, "/", out_of, "): ", prob)
+
+
+apresentacao_tcc()

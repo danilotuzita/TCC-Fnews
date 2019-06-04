@@ -228,6 +228,14 @@ def ex_3():
         result_file.to_csv('experiments/' + experiment + '/' + result_filename)
 
 
+def remove(text):
+    characters = ['"', "'", "*", ":", "/", "|", '\\', "(", ")", "{", "}", "[", "]", "&", "$", "#", "-", '’']
+    for char in characters:
+        text = text.replace(char, '')
+
+    return text
+
+
 def apresentacao_tcc():
     global _slice, p_delta, best_firefly, db, experiment, phrase_size
     experiment = '99'
@@ -238,13 +246,15 @@ def apresentacao_tcc():
 
     while True:
         text = input("Texto: ")
+        text = remove(text)
         [prob, found, out_of] = calc_text_prob(
                 text=text,
                 database=db,
                 w_firefly=best_firefly,
                 phrase_size=phrase_size
             )
-        print("Probabilidade Calculada(", found, "/", out_of, "): ", prob)
+        print(text)
+        print("Probabilidade Calculada (", found, "/", out_of, "):", prob > 0.5, " - ", prob)
 
 
 apresentacao_tcc()

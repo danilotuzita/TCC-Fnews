@@ -6,9 +6,9 @@ from classes.util import *
 # params setup
 _slice = 0
 p_delta = 0
-bound = 0.25
+bound = 0.1
 experiment = '0'
-phrase_size = 2
+phrase_size = 3
 
 # path setup
 csv_path = ''

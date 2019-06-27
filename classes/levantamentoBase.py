@@ -39,9 +39,9 @@ Chama a função enviando como parâmentros a base de dados:
 1 - A base de dados
 2 - Um nome para a saída da base formatada (se a base já existir será reescrita)
 3 - Vetor INT com os índices das planilhas que terão sequências contadas (vetor vazio = todas as planilhas)
-4 - Vetor INT com os índices das colunas das planilhas que terão sequências contadas (vetor vazio = todas as colunas)
+4 - INT que representa qual coluna será contada
 """
-countSequences('../database/raw_datasets/LIAR.xlsx', '../database/raw_datasets/saida.csv', [1], 2)
+countSequences('../database/raw_datasets/LIAR.xlsx', '../database/raw_datasets/saida.xls', [1], 2)
 
 """
 - As bases de entrada podem ser xlsx, mas a base de saída apenas xls
